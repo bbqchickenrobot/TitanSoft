@@ -1,0 +1,29 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TitanSoft", "TitanSoft\TitanSoft.csproj", "{A8D1789E-808D-448F-B380-9028F3D36F83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TitanSoft.Models", "TitanSoft.Models\TitanSoft.Models.csproj", "{17ABE41D-9542-421E-9C09-41A14D9BE2A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TitanSoft.DataAccess", "TitanSoft.DataAccess\TitanSoft.DataAccess.csproj", "{517FC7AC-723B-44D4-8569-740AB9EAEB34}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A8D1789E-808D-448F-B380-9028F3D36F83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8D1789E-808D-448F-B380-9028F3D36F83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8D1789E-808D-448F-B380-9028F3D36F83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8D1789E-808D-448F-B380-9028F3D36F83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17ABE41D-9542-421E-9C09-41A14D9BE2A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17ABE41D-9542-421E-9C09-41A14D9BE2A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17ABE41D-9542-421E-9C09-41A14D9BE2A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17ABE41D-9542-421E-9C09-41A14D9BE2A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{517FC7AC-723B-44D4-8569-740AB9EAEB34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{517FC7AC-723B-44D4-8569-740AB9EAEB34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{517FC7AC-723B-44D4-8569-740AB9EAEB34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{517FC7AC-723B-44D4-8569-740AB9EAEB34}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

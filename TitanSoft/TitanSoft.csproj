@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="foundatio" Version="7.0.1738" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
+    <PackageReference Include="newtonsoft.json" Version="11.0.2" />
+    <PackageReference Include="serilog" Version="2.7.1" />
+    <PackageReference Include="CacheManager.Core" Version="1.1.2" />
+    <PackageReference Include="CacheManager.Microsoft.Extensions.Configuration" Version="1.1.2" />
+    <PackageReference Include="CacheManager.Serialization.Json" Version="1.1.2" />
+    <PackageReference Include="CacheManager.Microsoft.Extensions.Logging" Version="1.1.2" />
+    <PackageReference Include="CacheManager.Microsoft.Extensions.Caching.Memory" Version="1.1.2" />
+    <PackageReference Include="RavenDB.Embedded" Version="4.1.2" />
+    <PackageReference Include="RavenDB.Client" Version="4.1.2" />
+    <PackageReference Include="RavenDB.Client.UniqueConstraints" Version="3.5.7" />
+    <PackageReference Include="Hangfire.Raven" Version="3.2.0" />
+    <PackageReference Include="RavenDB.Identity" Version="4.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TitanSoft.Models\TitanSoft.Models.csproj" />
+    <ProjectReference Include="..\TitanSoft.DataAccess\TitanSoft.DataAccess.csproj" />
+  </ItemGroup>
+</Project>
