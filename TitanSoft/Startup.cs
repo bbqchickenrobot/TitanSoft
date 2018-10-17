@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Raven.Client.Documents;
 using Raven.Identity;
 using TitanSoft.DataAccess;
+using TitanSoft.Entities;
 using TitanSoft.Helpers;
 using TitanSoft.Services;
 
@@ -36,7 +32,8 @@ namespace TitanSoft
 
             services.AddRavenDbAsyncSession(RavenDocumentStore.Store)
                     .AddRavenDbIdentity<AppUser>();
-                                // configure strongly typed settings objects
+
+            // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
 
@@ -57,12 +54,16 @@ namespace TitanSoft
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateAudience = false,
+                    RequireExpirationTime = true
                 };
             });
 
             // configure DI for application services
+            services.AddSingleton<IConfiguration>(Configuration);
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IOmdbApi, OmdbApi>();
+            services.AddSingleton<IDocumentStore>(RavenDocumentStore.Store);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

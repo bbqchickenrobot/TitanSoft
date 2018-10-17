@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TitanSoft.Models;
 
 namespace TitanSoft.DataAccess
 {
-    public interface IOmdbApi
+    public interface IOmdbApiAsync
     {
-         MovieModel GetMovie(string id);
-         List<MovieModel> Search(string term);
+        Task<MovieModel> GetMovieAsync(string id);
+        Task<SearchModel> SearchAsync(string term);
+    }
+
+    public interface IOmdbApi{
+        MovieModel GetMovie(string id);
+        SearchModel Search(string term);
     }
 }

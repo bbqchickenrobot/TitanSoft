@@ -6,35 +6,30 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Raven.Client.Documents;
+using Raven.Client.Documents.Session;
 using TitanSoft.Entities;
 using TitanSoft.Helpers;
 
 namespace TitanSoft.Services
 {
-    public interface IUserService
-    {
-        User Authenticate(string username, string password);
-        IEnumerable<User> GetAll();
-    }
 
     public class UserService : IUserService
     {
-        // users hardcoded for simplicity, store in a db with hashed passwords in production applications
-        private List<User> _users = new List<User>
-        { 
-            new User { Id = 1, FirstName = "Test", LastName = "User", Username = "test", Password = "test" } 
-        };
-
         private readonly AppSettings _appSettings;
+        protected readonly IDocumentStore store;
+        protected readonly IAsyncDocumentSession db;
 
-        public UserService(IOptions<AppSettings> appSettings)
+        public UserService(IOptions<AppSettings> appSettings, IDocumentStore store)
         {
             _appSettings = appSettings.Value;
+            this.store = store;
+            this.db = store.OpenAsyncSession("TitanSoft");
         }
 
-        public User Authenticate(string username, string password)
+        public AppUser Authenticate(string username, string password)
         {
-            var user = _users.SingleOrDefault(x => x.Username == username && x.Password == password);
+            var user = db.Query<AppUser>().SingleOrDefault(x => x.UserName == username && x.PasswordHash == password);
 
             // return null if user not found
             if (user == null)
@@ -42,7 +37,7 @@ namespace TitanSoft.Services
 
             // authentication successful so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var key = Encoding.UTF8.GetBytes(_appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[] 
@@ -56,16 +51,16 @@ namespace TitanSoft.Services
             user.Token = tokenHandler.WriteToken(token);
 
             // remove password before returning
-            user.Password = null;
+            user.PasswordHash = null;
 
             return user;
         }
 
-        public IEnumerable<User> GetAll()
+        public IEnumerable<AppUser> GetAll()
         {
             // return users without passwords
-            return _users.Select(x => {
-                x.Password = null;
+            return db.Query<AppUser>().ToList().Select(x => {
+                x.PasswordHash = null;
                 return x;
             });
         }

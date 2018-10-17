@@ -16,7 +16,7 @@ namespace TitanSoft.Models
         public string Title { get; set; }
 
         [JsonProperty("Year")]
-        public long Year { get; set; }
+        public object Year { get; set; }
 
         [JsonProperty("imdbID")]
         public string ImdbId { get; set; }
@@ -25,6 +25,6 @@ namespace TitanSoft.Models
         public string Type { get; set; }
 
         [JsonProperty("Poster")]
-        public Uri Poster { get; set; }
+        public string Poster { get; set; }
     }
 }
