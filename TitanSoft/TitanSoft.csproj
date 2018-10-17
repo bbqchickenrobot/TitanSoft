@@ -26,4 +26,7 @@
     <ProjectReference Include="..\TitanSoft.Models\TitanSoft.Models.csproj" />
     <ProjectReference Include="..\TitanSoft.DataAccess\TitanSoft.DataAccess.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\" />
+  </ItemGroup>
 </Project>
