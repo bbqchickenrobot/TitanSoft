@@ -14,7 +14,8 @@ namespace TitanSoft.DataAccess
         {
             var serverOptions = new ServerOptions()
             {
-                ServerUrl = "http://127.0.0.1:60956/"
+                ServerUrl = "http://127.0.0.1:60956/",
+                DataDirectory  = "~/Data/"
             };
 
             EmbeddedServer.Instance.StartServer(serverOptions);

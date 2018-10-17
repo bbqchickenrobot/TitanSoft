@@ -19,7 +19,8 @@ namespace TitanSoft
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                   .UseKestrel()
+                .UseUrls("http://localhost:5000")
+                .UseKestrel()
                 .UseStartup<Startup>();
     }
 }

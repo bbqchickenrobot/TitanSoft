@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TitanSoft", "TitanSoft\TitanSoft.csproj", "{A8D1789E-808D-448F-B380-9028F3D36F83}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TitanSoft.Api", "TitanSoft\TitanSoft.Api.csproj", "{A8D1789E-808D-448F-B380-9028F3D36F83}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TitanSoft.Models", "TitanSoft.Models\TitanSoft.Models.csproj", "{17ABE41D-9542-421E-9C09-41A14D9BE2A4}"
 EndProject
