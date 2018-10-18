@@ -7,12 +7,8 @@ using TitanSoft.DataAccess;
 namespace TitanSoft.Tests
 {
     [TestClass]
-    public class OmdbTests
+    public class OmdbTests : TestBase
     {
-        IConfiguration config = A.Fake<IConfiguration>();
-        ILogger logger = A.Fake<ILogger>();
-
-
         [TestMethod]
         public void Search_Movies_Test()
         {
