@@ -3,8 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using TitanSoft.Services;
 using TitanSoft.Entities;
 using TitanSoft.Models;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 
-namespace WebApi.Controllers
+namespace TitanSoft.Controllers
 {
     [Authorize]
     [ApiController]
@@ -12,22 +15,42 @@ namespace WebApi.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService userService;
+        readonly UserManager<AppUser> manager;
+        readonly IUserStore<AppUser> store;
+        readonly ILogger log;
 
-        public UsersController(IUserService userService) => this.userService = userService;
+        public UsersController(IUserService userService, UserManager<AppUser> manager, IUserStore<AppUser> store, ILogger logger)
+        {
+            this.userService = userService;
+            this.manager = manager;
+            this.store = store;
+            this.log = logger;
+        }
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody]LoginModel model)
+        public async Task<IActionResult> Authenticate([FromBody]LoginModel model)
         {
-            var user = userService.Authenticate(model.Username, model.Password);
+            var user = await userService.AuthenticateAsync(model.Username, model.Password);
 
             if (user == null)
+            {
+                log.LogError($"failed auth attempt for user {model.Username}");
                 return BadRequest(new { message = "Username or password is incorrect" });
+            }
             user.PasswordHash = ""; // don't share sensitice information
             return Ok(user);
         }
 
-        [HttpGet]
+        [AllowAnonymous]
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] AppUser user){
+            var result = await userService.RegisterAsync(user.Email, user.FirstName, user.LastName, user.PasswordHash);
+            result.PasswordHash = string.Empty;
+            return Ok(result);
+        }
+
+        [HttpGet("all")]
         public IActionResult GetAll()
         {
             var users =  userService.GetAll();
