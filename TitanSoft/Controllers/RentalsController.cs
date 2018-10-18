@@ -2,21 +2,36 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using TitanSoft.Api.Services;
+using TitanSoft.Models;
 
 namespace TitanSoft.Controllers
 {
-    [Route("api/v1/[controller]")]
     [ApiController]
+    [Authorize]
+    [Route("api/v1/[controller]")]
     [Produces("application/json")]
     public class RentalsController : ControllerBase
     {
-        ILogger log;
+        readonly IRentalService service;
+        readonly ILogger log;
 
-        public RentalsController(ILogger logger)
+        public RentalsController(IRentalService service, ILogger logger)
         {
+            this.service = service;
             log = logger;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<RentalModel>>> History()
+        {
+            var id = HttpContext.User.Identity.Name;
+            var results = await service.GetHistoryAsync(id);
+
+            return Ok(results);
         }
     }
 }

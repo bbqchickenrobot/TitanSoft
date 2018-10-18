@@ -8,10 +8,8 @@ namespace TitanSoft.Api.Middleware
 {
     public class PerfLoggingMiddleware
     {
-        ILogger log;
-        private readonly RequestDelegate _next;
-
-        public PerfLoggingMiddleware(ILogger logger) => log = logger;
+        readonly ILogger log;
+        readonly RequestDelegate _next;
 
         public PerfLoggingMiddleware(RequestDelegate next, ILogger logger)
         {

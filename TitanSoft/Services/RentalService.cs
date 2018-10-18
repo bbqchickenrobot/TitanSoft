@@ -19,8 +19,8 @@ namespace TitanSoft.Api.Services
             db = session;
         }
 
-        public Task<List<RentalModel>> GetHistory(string userId) =>
-            db.Query<RentalModel>().Where(x => x.UserId == userId).ToListAsync();
+        public async Task<List<RentalModel>> GetHistoryAsync(string userId) =>
+            await db.Query<RentalModel>().Where(x => x.UserId == userId).ToListAsync();
 
         public async Task RentAsync(RentalModel model)
         {

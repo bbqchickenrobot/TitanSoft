@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using TitanSoft.Api.Models;
 using TitanSoft.Entities;
 using TitanSoft.Models;
 using TitanSoft.Services;
@@ -11,6 +12,7 @@ using TitanSoft.Services;
 namespace TitanSoft.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/v1/[controller]")]
     [Produces("application/json")]
     public class MembersController : ControllerBase
@@ -45,9 +47,9 @@ namespace TitanSoft.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] AppUser user)
+        public async Task<IActionResult> Register([FromBody] RegistrationModel user)
         {
-            var result = await userService.RegisterAsync(user.Email, user.FirstName, user.LastName, user.PasswordHash);
+            var result = await userService.RegisterAsync(user);
             result.PasswordHash = string.Empty;
             return Ok(result);
         }

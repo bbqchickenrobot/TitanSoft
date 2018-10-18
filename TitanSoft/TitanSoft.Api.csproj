@@ -47,5 +47,7 @@
   <ItemGroup>
     <None Remove="Data\System\Temp\scratch.0000000000.buffers" />
     <None Remove="Data\Databases\TitanSoftStore\Configuration\Temp\compression.0000000000.buffers" />
+    <None Remove="Data\System\Temp\scratch.0000000000.buffers" />
+    <None Remove="Data\System\Temp\compression.0000000000.buffers" />
   </ItemGroup>
 </Project>

@@ -11,20 +11,21 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
+using TitanSoft.Api.Models;
 using TitanSoft.Entities;
 using TitanSoft.Helpers;
 
 namespace TitanSoft.Services
 {
 
-    public class UserService : IUserService, IUserServiceAsync
+    public class MemberService : IUserService, IUserServiceAsync
     {
         private readonly AppSettings _appSettings;
         protected readonly IAsyncDocumentSession db;
         protected readonly UserManager<AppUser> umanager;
         protected readonly ILogger log;
 
-        public UserService(IOptions<AppSettings> appSettings, IAsyncDocumentSession db, UserManager<AppUser> manager, ILogger logger)
+        public MemberService(IOptions<AppSettings> appSettings, IAsyncDocumentSession db, UserManager<AppUser> manager, ILogger logger)
         {
             _appSettings = appSettings.Value;
             this.db = db;
@@ -32,17 +33,21 @@ namespace TitanSoft.Services
             log = logger;
         }
 
-        public async Task<AppUser> RegisterAsync(string email, string firstname, string lastname, string password){
-            log.LogInformation($"registering user {email}");
+        public async Task<AppUser> RegisterAsync(RegistrationModel model)
+        {
+            log.LogInformation($"registering user {model.Email}");
             var user = new AppUser()
             {
-                Email = email,
-                FirstName = firstname,
-                LastName = lastname
+                Email = model.Email,
+                FirstName = model.Firstname,
+                LastName = model.Lastname,
+                Id = model.Email,
+                UserName = model.Email
             };
 
-            await umanager.AddPasswordAsync(user, password);
+            await umanager.AddPasswordAsync(user, model.Password);
             var result =  await umanager.CreateAsync(user);
+            await db.SaveChangesAsync();
             log.LogInformation($"successfully registered user");
             return user;
         }
@@ -50,15 +55,16 @@ namespace TitanSoft.Services
         public async Task<AppUser> AuthenticateAsync(string username, string password)
         {
             log.LogInformation($"authenticating user {username}");
-            var user = await db.Query<AppUser>().SingleOrDefaultAsync(x => x.UserName == username || x.Email == username);
+            var user = await umanager.FindByIdAsync(username);
 
             if(user == null){
                 log.LogInformation($"unable to find user");
                 return null;
             }
-            var hash = umanager.PasswordHasher.HashPassword(user, password);
-            var result = umanager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
-            
+
+            var result = await umanager.CheckPasswordAsync(user, password);
+            if (!result)
+                return null;
 
             // authentication successful so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -67,7 +73,9 @@ namespace TitanSoft.Services
             {
                 Subject = new ClaimsIdentity(new Claim[] 
                 {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
+                    new Claim(ClaimTypes.Name, user.Id),
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim("id", user.Id)
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -107,8 +115,8 @@ namespace TitanSoft.Services
 
         public IEnumerable<AppUser> GetAll() => GetAllAsync().GetAwaiter().GetResult();
 
-        public AppUser Register(string email, string firstname, string lastname, string password) =>
-            RegisterAsync(email, firstname, lastname, password).GetAwaiter().GetResult();
+        public AppUser Register(RegistrationModel model) =>
+            RegisterAsync(model).GetAwaiter().GetResult();
 
         public AppUser Get(string id) => GetAsync(id).GetAwaiter().GetResult();
     }

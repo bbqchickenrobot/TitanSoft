@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using TitanSoft.Api.Models;
 using TitanSoft.Entities;
 
 namespace TitanSoft.Services
@@ -8,7 +9,7 @@ namespace TitanSoft.Services
     {
         AppUser Authenticate(string username, string password);
         IEnumerable<AppUser> GetAll();
-        AppUser Register(string email, string firstname, string lastname, string password);
+        AppUser Register(RegistrationModel model);
         AppUser Get(string id);
         void Update(AppUser user);
         void Delete(string id);
@@ -18,7 +19,7 @@ namespace TitanSoft.Services
     public interface IUserServiceAsync{
         Task<AppUser> AuthenticateAsync(string username, string password);
         Task<IEnumerable<AppUser>> GetAllAsync();
-        Task<AppUser> RegisterAsync(string email, string firstname, string lastname, string password);
+        Task<AppUser> RegisterAsync(RegistrationModel model);
         Task<AppUser> GetAsync(string id);
         Task UpdateAsync(AppUser user);
         Task DeleteAsync(string id);

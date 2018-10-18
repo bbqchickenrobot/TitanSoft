@@ -20,6 +20,7 @@ using TitanSoft.Helpers;
 using TitanSoft.Services;
 using CacheManager.Core.Utility;
 using CacheManager.MicrosoftCachingMemory;
+using Microsoft.AspNetCore.Identity;
 
 namespace TitanSoft
 {
@@ -37,16 +38,35 @@ namespace TitanSoft
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSingleton((sp) => loggerFactory.CreateLogger("general"));
-            services.AddRavenDbAsyncSession(RavenDocumentStore.Store)
-                    .AddRavenDbIdentity<AppUser>();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "TitanSoft Movies API", Version = "v1" });
             });
+
+            services.AddRavenDbAsyncSession(RavenDocumentStore.Store)
+                .AddRavenDbIdentity<AppUser>(options =>
+                {
+                        // Password settings.
+                        options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 1;
+
+                        // Lockout settings.
+                        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
+                options.Lockout.MaxFailedAccessAttempts = 15;
+                options.Lockout.AllowedForNewUsers = true;
+
+                        // User settings.
+                        options.User.AllowedUserNameCharacters =
+                            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                options.User.RequireUniqueEmail = true;
+                });
 
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
@@ -57,10 +77,10 @@ namespace TitanSoft
             var key = Encoding.UTF8.GetBytes(appSettings.Secret);
             services.AddAuthentication(x =>
             {
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(x =>
+            }).AddJwtBearer(x =>
             {
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = true;
@@ -74,15 +94,17 @@ namespace TitanSoft
                 };
             });
 
-            // configure DI for application services
+            services.AddAuthorization((o) =>
+            {
+
+            });
+
+
             services.AddSingleton(Configuration);
-            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserService, MemberService>();
             services.AddScoped<IOmdbApi, OmdbApi>();
             services.AddSingleton(RavenDocumentStore.Store);
-            services.AddScoped((sp) =>
-            {
-                return new UserStore<AppUser>(sp.GetService<IAsyncDocumentSession>());
-            });
+            services.AddScoped((sp) => new UserStore<AppUser>(sp.GetService<IAsyncDocumentSession>()));
             services.AddScoped<IMovieService, MovieService>();
             services.AddScoped<IRentalService, RentalService>();
         }
@@ -102,10 +124,10 @@ namespace TitanSoft
             else
             {
                 app.UseHsts();
+                app.UseExceptionHandlingMiddleware();
             }
 
             app.UseHttpsRedirection();
-            app.UseMvc();
 
             // global cors policy
             app.UseCors(x => x
@@ -126,7 +148,7 @@ namespace TitanSoft
             });
 
             app.UseAuthentication();
-            
+            app.UseMvc();
         }
     }
 }

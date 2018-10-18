@@ -20,7 +20,7 @@ namespace TitanSoft
                 .Enrich.FromLogContext()
                 .WriteTo.ColoredConsole()
                 .CreateLogger();
-            SeedDatabaseAsync(true).GetAwaiter().GetResult();
+            SeedDatabaseAsync().GetAwaiter().GetResult();
             CreateWebHostBuilder(args).Build().Run();
         }
 
@@ -35,8 +35,11 @@ namespace TitanSoft
         {
             var path = Path.Combine(Directory.GetCurrentDirectory(), "Data") + Path.DirectorySeparatorChar 
                            + "Databases" + Path.DirectorySeparatorChar + "TitanSoftStore";
-            if (!overwrite && File.Exists(path + Path.DirectorySeparatorChar + "Raven.voron")) 
-                Directory.Delete(path);
+            var exists = File.Exists(path + Path.DirectorySeparatorChar + "Raven.voron");
+            if (overwrite && exists)
+                Directory.Delete(path, true);
+            else if (exists)
+                return;
 
             var api = new OmdbApi(null, null);
 
@@ -65,7 +68,7 @@ namespace TitanSoft
                 await db.SaveChangesAsync();
             }
             sb.Stop();
-            Debug.WriteLine($"seeding the database took {sb.ElapsedMilliseconds}");
+            Debug.WriteLine($"seeding the database took {sb.ElapsedMilliseconds} ms");
         }
     }
 }
