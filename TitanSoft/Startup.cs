@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
+using CacheManager.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,24 +13,26 @@ using Raven.Client.Documents.Session;
 using Raven.Identity;
 using Swashbuckle.AspNetCore.Swagger;
 using TitanSoft.Api.Middleware;
+using TitanSoft.Api.Services;
 using TitanSoft.DataAccess;
 using TitanSoft.Entities;
 using TitanSoft.Helpers;
 using TitanSoft.Services;
+using CacheManager.Core.Utility;
+using CacheManager.MicrosoftCachingMemory;
 
 namespace TitanSoft
 {
     public class Startup
     {
         ILoggerFactory loggerFactory;
+        public IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration, ILoggerFactory factory)
         {
             Configuration = configuration;
             loggerFactory = factory;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -75,11 +79,14 @@ namespace TitanSoft
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IOmdbApi, OmdbApi>();
             services.AddSingleton(RavenDocumentStore.Store);
-            services.AddScoped<UserStore<AppUser>>((sp) =>
+            services.AddScoped((sp) =>
             {
                 return new UserStore<AppUser>(sp.GetService<IAsyncDocumentSession>());
             });
+            services.AddScoped<IMovieService, MovieService>();
+            services.AddScoped<IRentalService, RentalService>();
         }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {

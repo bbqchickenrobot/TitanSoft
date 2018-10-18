@@ -30,7 +30,11 @@ namespace TitanSoft.Api.Services
 
         public async Task<List<MovieModel>> GetAllAsync() => await db.Query<MovieModel>().ToListAsync();
 
-        public async Task SaveAsync(MovieModel movie) => await db.StoreAsync(movie);
+        public async Task SaveAsync(MovieModel movie)
+        {
+            await db.StoreAsync(movie);
+            await db.SaveChangesAsync();
+        }
 
         public async Task<List<Search>> SearchAsync(string term)
         {

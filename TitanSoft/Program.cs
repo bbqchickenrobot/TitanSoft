@@ -55,11 +55,14 @@ namespace TitanSoft
                                         search("kids"), search("cartoon"));
 
             using (var db = RavenDocumentStore.Store.OpenAsyncSession())
-            foreach (var model in results)
-            foreach (var result in model.Search)
             {
-                var movie = await api.GetMovieAsync(result.ImdbId);
-                await db.StoreAsync(movie);
+                foreach (var model in results)
+                foreach (var result in model.Search)
+                {
+                    var movie = await api.GetMovieAsync(result.ImdbId);
+                    await db.StoreAsync(movie);
+                }
+                await db.SaveChangesAsync();
             }
             sb.Stop();
             Debug.WriteLine($"seeding the database took {sb.ElapsedMilliseconds}");
