@@ -39,6 +39,7 @@ namespace TitanSoft
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton((sp) => loggerFactory.CreateLogger("general"));
+            services.AddMemoryCache();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // Register the Swagger generator, defining 1 or more Swagger documents
@@ -50,22 +51,22 @@ namespace TitanSoft
             services.AddRavenDbAsyncSession(RavenDocumentStore.Store)
                 .AddRavenDbIdentity<AppUser>(options =>
                 {
-                        // Password settings.
-                        options.Password.RequireDigit = false;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequiredLength = 1;
+                    // Password settings.
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequiredLength = 1;
 
-                        // Lockout settings.
-                        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
-                options.Lockout.MaxFailedAccessAttempts = 15;
-                options.Lockout.AllowedForNewUsers = true;
+                    // Lockout settings.
+                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
+                    options.Lockout.MaxFailedAccessAttempts = 15;
+                    options.Lockout.AllowedForNewUsers = true;
 
-                        // User settings.
-                        options.User.AllowedUserNameCharacters =
-                            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-                options.User.RequireUniqueEmail = true;
+                    // User settings.
+                    options.User.AllowedUserNameCharacters =
+                        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                    options.User.RequireUniqueEmail = true;
                 });
 
             // configure strongly typed settings objects

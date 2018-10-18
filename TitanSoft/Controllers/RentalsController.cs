@@ -25,6 +25,13 @@ namespace TitanSoft.Controllers
             log = logger;
         }
 
+        [HttpPost]
+        public async Task RentMovie([FromBody] RentalModel model)
+        {
+            await service.RentAsync(model);
+            Ok($"Thank you for your purchase. Enjoy your movie. Your rental expires on {model.Expiring}");
+        }
+
         [HttpGet]
         public async Task<ActionResult<List<RentalModel>>> History()
         {
