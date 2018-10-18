@@ -8,6 +8,7 @@ namespace TitanSoft.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
+    [Produces("application/json")]
     public class RentalsController : ControllerBase
     {
         

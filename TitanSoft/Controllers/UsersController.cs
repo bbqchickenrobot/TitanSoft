@@ -11,6 +11,7 @@ namespace TitanSoft.Controllers
 {
     [Authorize]
     [ApiController]
+    [Produces("application/json")]
     [Route("[controller]")]
     public class UsersController : ControllerBase
     {
