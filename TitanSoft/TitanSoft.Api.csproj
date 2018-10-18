@@ -30,5 +30,6 @@
     <Folder Include="Data\" />
     <Folder Include="Helpers\" />
     <Folder Include="Models\" />
+    <Folder Include="Middleware\" />
   </ItemGroup>
 </Project>

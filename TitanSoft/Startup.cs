@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
 using Raven.Identity;
+using TitanSoft.Api.Middleware;
 using TitanSoft.DataAccess;
 using TitanSoft.Entities;
 using TitanSoft.Helpers;
@@ -79,6 +80,10 @@ namespace TitanSoft
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddDebug();
+
+            app.UseRequestLogging(loggerFactory.CreateLogger<PerfLoggingMiddleware>());
 
             if (env.IsDevelopment())
             {
@@ -92,9 +97,6 @@ namespace TitanSoft
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();
-
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
 
             // global cors policy
             app.UseCors(x => x
