@@ -11,8 +11,8 @@ namespace TitanSoft.Api.Services
 {
     public class MovieService : IMovieService
     {
-        private readonly IAsyncDocumentSession db;
-        private readonly ILogger log;
+        readonly IAsyncDocumentSession db;
+        readonly ILogger log;
         IConfiguration config;
 
         public MovieService(IAsyncDocumentSession session, ILogger logger, IConfiguration configuration)

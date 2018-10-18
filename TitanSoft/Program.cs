@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using TitanSoft.DataAccess;
 using TitanSoft.Models;
 
@@ -16,7 +12,7 @@ namespace TitanSoft
     {
         public static void Main(string[] args)
         {
-            SeedDatabaseAsync().GetAwaiter().GetResult();
+            SeedDatabaseAsync(true).GetAwaiter().GetResult();
             CreateWebHostBuilder(args).Build().Run();
         }
 
@@ -41,17 +37,21 @@ namespace TitanSoft
                 return task;
             }
 
+            var sb = new Stopwatch();
+            sb.Start();
             var results = await Task.WhenAll(search("horror"), search("drama"), 
-                                       search("comedy"), search("anime"));
+                                        search("comedy"), search("anime"),
+                                        search("love"), search("wild"), search("children"));
 
             using (var db = RavenDocumentStore.Store.OpenAsyncSession())
             foreach (var model in results)
-                foreach (var result in model.Search)
-                {
-                    var movie = await api.GetMovieAsync(result.ImdbId);
-                    await db.StoreAsync(movie);
-                }
-            
+            foreach (var result in model.Search)
+            {
+                var movie = await api.GetMovieAsync(result.ImdbId);
+                await db.StoreAsync(movie);
+            }
+            sb.Stop();
+            Debug.WriteLine($"seeding the database took {sb.ElapsedMilliseconds}");
         }
     }
 }
