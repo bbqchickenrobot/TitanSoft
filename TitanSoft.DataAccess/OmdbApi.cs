@@ -15,9 +15,7 @@ namespace TitanSoft.DataAccess
 
         public OmdbApi(IConfiguration config, ILogger logger)
         {
-            url = config["OmdbUrl"];
-            if (string.IsNullOrEmpty(url))
-                url = "http://www.omdbapi.com/?apikey=c4d85896&type=movie";
+            url = config?["OmdbUrl"] ?? "http://www.omdbapi.com/?apikey=c4d85896&type=movie";
             log = logger;
         }
 

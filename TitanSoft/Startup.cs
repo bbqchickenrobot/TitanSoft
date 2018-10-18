@@ -21,18 +21,20 @@ namespace TitanSoft
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        ILoggerFactory loggerFactory;
+        public Startup(IConfiguration configuration, ILoggerFactory factory)
         {
             Configuration = configuration;
+            loggerFactory = factory;
         }
 
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services, ILoggerFactory factory)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddScoped<ILogger>((sp) => factory.CreateLogger("general"));
+            services.AddSingleton<ILogger>((sp) => loggerFactory.CreateLogger("general"));
             services.AddRavenDbAsyncSession(RavenDocumentStore.Store)
                     .AddRavenDbIdentity<AppUser>();
 
@@ -95,7 +97,6 @@ namespace TitanSoft
             }
             
             app.UseHttpsRedirection();
-            app.UseAuthentication();
             app.UseMvc();
 
             // global cors policy

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Raven.Client.Documents;
 using Raven.Embedded;
 
@@ -15,7 +16,7 @@ namespace TitanSoft.DataAccess
             var serverOptions = new ServerOptions()
             {
                 ServerUrl = "http://127.0.0.1:60956/",
-                DataDirectory  = "~/Data/"
+                DataDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Data")
             };
 
             EmbeddedServer.Instance.StartServer(serverOptions);

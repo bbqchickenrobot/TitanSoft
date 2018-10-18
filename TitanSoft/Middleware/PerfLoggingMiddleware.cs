@@ -26,17 +26,12 @@ namespace TitanSoft.Api.Middleware
             // Call the next delegate/middleware in the pipeline
             await _next(context);
             sw.Stop();
-            log.LogInformation($"request for {context.Request.Path} took {sw.ElapsedMilliseconds} ms");
+            log.LogInformation($"{context.Request.Protocol} request for {context.Request.Path} took {sw.ElapsedMilliseconds} ms");
         }
     }
 
     public static class PerfLoggingMiddlewareRegistration{
-        public static void UseRequestLogging(this IApplicationBuilder app, ILogger log){
-            app.Use(async (context, next) =>
-            {
-                var mw = new PerfLoggingMiddleware(log);
-                await mw.InvokeAsync(context);
-            });
-        }
+        public static IApplicationBuilder UseRequestLogging(this IApplicationBuilder app, ILogger log) =>
+            app.UseMiddleware<PerfLoggingMiddleware>();
     }
 }
