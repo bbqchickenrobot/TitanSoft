@@ -3,6 +3,8 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Serilog;
+using Serilog.Events;
 using TitanSoft.DataAccess;
 using TitanSoft.Models;
 
@@ -12,6 +14,12 @@ namespace TitanSoft
     {
         public static void Main(string[] args)
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .Enrich.FromLogContext()
+                .WriteTo.ColoredConsole()
+                .CreateLogger();
             SeedDatabaseAsync(true).GetAwaiter().GetResult();
             CreateWebHostBuilder(args).Build().Run();
         }
@@ -19,6 +27,7 @@ namespace TitanSoft
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseUrls("http://localhost:5000")
+                .UseSerilog()
                 .UseKestrel()
                 .UseStartup<Startup>();
 
@@ -41,7 +50,8 @@ namespace TitanSoft
             sb.Start();
             var results = await Task.WhenAll(search("horror"), search("drama"), 
                                         search("comedy"), search("anime"),
-                                        search("love"), search("wild"), search("children"));
+                                        search("love"), search("wild"), 
+                                        search("children"), search("thriller"));
 
             using (var db = RavenDocumentStore.Store.OpenAsyncSession())
             foreach (var model in results)

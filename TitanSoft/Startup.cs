@@ -22,6 +22,7 @@ namespace TitanSoft
     public class Startup
     {
         ILoggerFactory loggerFactory;
+
         public Startup(IConfiguration configuration, ILoggerFactory factory)
         {
             Configuration = configuration;
@@ -34,7 +35,7 @@ namespace TitanSoft
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddSingleton<ILogger>((sp) => loggerFactory.CreateLogger("general"));
+            services.AddSingleton((sp) => loggerFactory.CreateLogger("general"));
             services.AddRavenDbAsyncSession(RavenDocumentStore.Store)
                     .AddRavenDbIdentity<AppUser>();
 

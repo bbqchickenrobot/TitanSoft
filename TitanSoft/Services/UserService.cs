@@ -91,12 +91,14 @@ namespace TitanSoft.Services
             });
         }
 
+        public async Task DeleteAsync(string id ) =>
+            await umanager.DeleteAsync(await umanager.FindByIdAsync(id));
+
+        public void Delete(string id) => DeleteAsync(id).GetAwaiter().GetResult();
+
         public void Update(AppUser user) => UpdateAsync(user).GetAwaiter().GetResult();
 
-        public async Task UpdateAsync(AppUser user)
-        {
-            var result = await umanager.UpdateAsync(user);
-        }
+        public async Task UpdateAsync(AppUser user) => await umanager.UpdateAsync(user);
 
         public async Task<AppUser> GetAsync(string id) => await db.LoadAsync<AppUser>(id);
 

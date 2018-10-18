@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -42,7 +40,7 @@ namespace TitanSoft.Controllers
                 var user = await userService.AuthenticateAsync(model.Username, model.Password);
                 result = (user == null) ? Unauthorized() as ActionResult : Ok(user);
             }catch(Exception ex){
-                log.LogError($"unable to find user {model.Username}");
+                log.LogError($"unable to find user {model.Username}", ex);
             }
             result = Unauthorized();
             return result;
@@ -53,7 +51,8 @@ namespace TitanSoft.Controllers
         public async Task<ActionResult> Update([FromBody] AppUser user)
         {
             try{
-                userService.Update(user);
+                await userService.UpdateAsync(user);
+                return Ok();
             }catch(Exception ex){
                 log.LogError(ex.Message, ex);
             }
@@ -61,8 +60,15 @@ namespace TitanSoft.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task Delete(string id)
+        public async Task<ActionResult> Delete(string id)
         {
+            try{
+                await userService.DeleteAsync(id);
+                Ok();
+            }catch(Exception ex){
+                log.LogError(ex.Message, ex);
+            }
+            return BadRequest();
         }
     }
 }

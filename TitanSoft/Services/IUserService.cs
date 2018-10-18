@@ -11,6 +11,7 @@ namespace TitanSoft.Services
         AppUser Register(string email, string firstname, string lastname, string password);
         AppUser Get(string id);
         void Update(AppUser user);
+        void Delete(string id);
     }
 
 
@@ -20,5 +21,6 @@ namespace TitanSoft.Services
         Task<AppUser> RegisterAsync(string email, string firstname, string lastname, string password);
         Task<AppUser> GetAsync(string id);
         Task UpdateAsync(AppUser user);
+        Task DeleteAsync(string id);
     }
 }
