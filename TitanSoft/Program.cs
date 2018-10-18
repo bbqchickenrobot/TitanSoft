@@ -26,7 +26,7 @@ namespace TitanSoft
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseUrls("http://localhost:5000")
+                .UseUrls("http://localhost:5000;https://localhost:5001;")
                 .UseSerilog()
                 .UseKestrel()
                 .UseStartup<Startup>();
@@ -51,7 +51,8 @@ namespace TitanSoft
             var results = await Task.WhenAll(search("horror"), search("drama"), 
                                         search("comedy"), search("anime"),
                                         search("love"), search("wild"), 
-                                        search("children"), search("thriller"));
+                                        search("children"), search("thriller"),
+                                        search("kids"), search("cartoon"));
 
             using (var db = RavenDocumentStore.Store.OpenAsyncSession())
             foreach (var model in results)

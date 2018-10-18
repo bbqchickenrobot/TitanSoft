@@ -2,15 +2,14 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
 using Raven.Identity;
+using Swashbuckle.AspNetCore.Swagger;
 using TitanSoft.Api.Middleware;
 using TitanSoft.DataAccess;
 using TitanSoft.Entities;
@@ -39,7 +38,12 @@ namespace TitanSoft
             services.AddRavenDbAsyncSession(RavenDocumentStore.Store)
                     .AddRavenDbIdentity<AppUser>();
 
-            
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "TitanSoft Movies API", Version = "v1" });
+            });
+
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
@@ -67,14 +71,10 @@ namespace TitanSoft
             });
 
             // configure DI for application services
-            services.AddSingleton<IConfiguration>(Configuration);
+            services.AddSingleton(Configuration);
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IOmdbApi, OmdbApi>();
-            services.AddSingleton<IDocumentStore>(RavenDocumentStore.Store);
-            //services.AddScoped<IAsyncDocumentSession>((sp) =>
-            //{
-            //    return RavenDocumentStore.Store.OpenAsyncSession();
-            //});
+            services.AddSingleton(RavenDocumentStore.Store);
             services.AddScoped<UserStore<AppUser>>((sp) =>
             {
                 return new UserStore<AppUser>(sp.GetService<IAsyncDocumentSession>());
@@ -96,7 +96,7 @@ namespace TitanSoft
             {
                 app.UseHsts();
             }
-            
+
             app.UseHttpsRedirection();
             app.UseMvc();
 
@@ -106,6 +106,17 @@ namespace TitanSoft
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials());
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "TitanSoft Movie API V1");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.UseAuthentication();
             
