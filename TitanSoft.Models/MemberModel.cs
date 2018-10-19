@@ -1,9 +1,9 @@
 ﻿using System;
 using Raven.Identity;
 
-namespace TitanSoft.Entities
+namespace TitanSoft.Models
 {
-    public class AppUser : IdentityUser
+    public class MemberModel : IdentityUser
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

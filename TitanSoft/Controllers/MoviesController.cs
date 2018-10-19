@@ -11,7 +11,7 @@ using TitanSoft.Models;
 namespace TitanSoft.Controllers
 {
     [ApiController]
-    [AllowAnonymous]
+    [Authorize]
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
     public class MoviesController : ControllerBase
@@ -28,6 +28,7 @@ namespace TitanSoft.Controllers
         }
 
         [HttpGet("all")]
+        [AllowAnonymous]
         [ResponseCache(Duration = 120)]
         public async Task<ActionResult<List<MovieModel>>> AllAsync()
         {
@@ -40,12 +41,43 @@ namespace TitanSoft.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         [ResponseCache(Duration = 120)]
-        public async Task<ActionResult<string>> GetAsync(string id) =>
-            Ok(await cache.GetOrCreateAsync(id, async (e) => 
+        public async Task<ActionResult<string>> GetAsync(string id)
+        {
+            var results = await cache.GetOrCreateAsync(id, async (e) =>
                     {
                         e.SetSlidingExpiration(TimeSpan.FromMinutes(2));
                         return await service.GetAsync(id);
-                    }));
+                    });
+            return Ok(results);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("search/{term}")]
+        public async Task<ActionResult<List<Search>>> Search(string term)
+        {
+            var results = await cache.GetOrCreateAsync(term, async (e) =>
+            {
+                e.SetSlidingExpiration(TimeSpan.FromHours(12));
+                return await service.SearchAsync(term);
+            });
+            return Ok(results);
+        }
+
+        [Authorize]
+        [HttpPost("save")]
+        public async Task<ActionResult> Save(MovieModel movie)
+        {
+            await service.SaveAsync(movie);
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPut("update")]
+        public async Task<ActionResult> Update(MovieModel movie){
+            await service.UpdateAsync(movie);
+            return Ok();
+        }
     }
 }

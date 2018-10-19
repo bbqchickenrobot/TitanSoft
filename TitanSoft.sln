@@ -9,6 +9,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TitanSoft.DataAccess", "Tit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TitanSoft.Tests", "TitanSoft.Tests\TitanSoft.Tests.csproj", "{76B56C13-A97D-44AB-9CEB-7CAC7B74B7F3}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{DF25D4A5-B307-43AE-9730-516169FD568B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{67D26EDD-4544-4DE0-8530-C01E74747531}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,5 +38,9 @@ Global
 		{76B56C13-A97D-44AB-9CEB-7CAC7B74B7F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76B56C13-A97D-44AB-9CEB-7CAC7B74B7F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76B56C13-A97D-44AB-9CEB-7CAC7B74B7F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF25D4A5-B307-43AE-9730-516169FD568B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF25D4A5-B307-43AE-9730-516169FD568B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF25D4A5-B307-43AE-9730-516169FD568B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF25D4A5-B307-43AE-9730-516169FD568B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

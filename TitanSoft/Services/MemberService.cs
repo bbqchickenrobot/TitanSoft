@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -12,7 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
 using TitanSoft.Api.Models;
-using TitanSoft.Entities;
+using TitanSoft.Models;
 using TitanSoft.Helpers;
 
 namespace TitanSoft.Services
@@ -22,10 +22,10 @@ namespace TitanSoft.Services
     {
         private readonly AppSettings _appSettings;
         protected readonly IAsyncDocumentSession db;
-        protected readonly UserManager<AppUser> umanager;
+        protected readonly UserManager<MemberModel> umanager;
         protected readonly ILogger log;
 
-        public MemberService(IOptions<AppSettings> appSettings, IAsyncDocumentSession db, UserManager<AppUser> manager, ILogger logger)
+        public MemberService(IOptions<AppSettings> appSettings, IAsyncDocumentSession db, UserManager<MemberModel> manager, ILogger logger)
         {
             _appSettings = appSettings.Value;
             this.db = db;
@@ -33,10 +33,10 @@ namespace TitanSoft.Services
             log = logger;
         }
 
-        public async Task<AppUser> RegisterAsync(RegistrationModel model)
+        public async Task<MemberModel> RegisterAsync(RegistrationModel model)
         {
             log.LogInformation($"registering user {model.Email}");
-            var user = new AppUser()
+            var user = new MemberModel()
             {
                 Email = model.Email,
                 FirstName = model.Firstname,
@@ -52,7 +52,7 @@ namespace TitanSoft.Services
             return user;
         }
 
-        public async Task<AppUser> AuthenticateAsync(string username, string password)
+        public async Task<MemberModel> AuthenticateAsync(string username, string password)
         {
             log.LogInformation($"authenticating user {username}");
             var user = await umanager.FindByIdAsync(username);
@@ -71,9 +71,11 @@ namespace TitanSoft.Services
             var key = Encoding.UTF8.GetBytes(_appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
+                Audience = "Everyone",
+                Issuer = "TitanSoft.com", 
                 Subject = new ClaimsIdentity(new Claim[] 
                 {
-                    new Claim(ClaimTypes.Name, user.Id),
+                    new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim("id", user.Id)
                 }),
@@ -89,10 +91,10 @@ namespace TitanSoft.Services
             return user;
         }
 
-        public async Task<IEnumerable<AppUser>> GetAllAsync()
+        public async Task<IEnumerable<MemberModel>> GetAllAsync()
         {
             // return users without passwords
-            var users = await db.Query<AppUser>().ToListAsync();
+            var users = await db.Query<MemberModel>().ToListAsync();
             return  users.Select(x => {
                 x.PasswordHash = null;
                 return x;
@@ -104,20 +106,20 @@ namespace TitanSoft.Services
 
         public void Delete(string id) => DeleteAsync(id).GetAwaiter().GetResult();
 
-        public void Update(AppUser user) => UpdateAsync(user).GetAwaiter().GetResult();
+        public void Update(MemberModel user) => UpdateAsync(user).GetAwaiter().GetResult();
 
-        public async Task UpdateAsync(AppUser user) => await umanager.UpdateAsync(user);
+        public async Task UpdateAsync(MemberModel user) => await umanager.UpdateAsync(user);
 
-        public async Task<AppUser> GetAsync(string id) => await db.LoadAsync<AppUser>(id);
+        public async Task<MemberModel> GetAsync(string id) => await db.LoadAsync<MemberModel>(id);
 
-        public AppUser Authenticate(string username, string password) => 
+        public MemberModel Authenticate(string username, string password) => 
             AuthenticateAsync(username, password).GetAwaiter().GetResult();
 
-        public IEnumerable<AppUser> GetAll() => GetAllAsync().GetAwaiter().GetResult();
+        public IEnumerable<MemberModel> GetAll() => GetAllAsync().GetAwaiter().GetResult();
 
-        public AppUser Register(RegistrationModel model) =>
+        public MemberModel Register(RegistrationModel model) =>
             RegisterAsync(model).GetAwaiter().GetResult();
 
-        public AppUser Get(string id) => GetAsync(id).GetAwaiter().GetResult();
+        public MemberModel Get(string id) => GetAsync(id).GetAwaiter().GetResult();
     }
 }

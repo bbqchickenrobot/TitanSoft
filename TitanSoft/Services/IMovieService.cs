@@ -12,5 +12,6 @@ namespace TitanSoft.Api.Services
         Task<List<Search>> SearchAsync(string term);
         Task DeleteAsync(string id);
         Task DeleteAsync(MovieModel movie);
+        Task UpdateAsync(MovieModel movie);
     }
 }

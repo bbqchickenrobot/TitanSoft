@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  titansoft.api:
+    image: ${DOCKER_REGISTRY}titansoft
+    build:
+      context: .
+      dockerfile: TitanSoft/Dockerfile

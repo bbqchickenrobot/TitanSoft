@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TitanSoft.Api.Models;
-using TitanSoft.Entities;
 using TitanSoft.Models;
 using TitanSoft.Services;
 
@@ -18,11 +17,11 @@ namespace TitanSoft.Controllers
     public class MembersController : ControllerBase
     {
         readonly IUserService userService;
-        readonly UserManager<AppUser> manager;
-        readonly IUserStore<AppUser> store;
+        readonly UserManager<MemberModel> manager;
+        readonly IUserStore<MemberModel> store;
         readonly ILogger log;
 
-        public MembersController(IUserService service, UserManager<AppUser> manager, IUserStore<AppUser> store, ILogger logger)
+        public MembersController(IUserService service, UserManager<MemberModel> manager, IUserStore<MemberModel> store, ILogger logger)
         {
             this.userService = service;
             this.manager = manager;
@@ -62,7 +61,7 @@ namespace TitanSoft.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<AppUser>> Get(string id)
+        public async Task<ActionResult<MemberModel>> Get(string id)
         {
             var user = await userService.GetAsync(id);
             if (user == null)
@@ -71,7 +70,7 @@ namespace TitanSoft.Controllers
         }
 
         [HttpPut()]
-        public async Task<ActionResult> Update([FromBody] AppUser user)
+        public async Task<ActionResult> Update([FromBody] MemberModel user)
         {
             try{
                 await userService.UpdateAsync(user);

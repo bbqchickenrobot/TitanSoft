@@ -11,6 +11,9 @@ namespace TitanSoft.Models
         [JsonProperty("movie_id")]
         public string MovieId { get; set; }
 
+        [JsonProperty("movie_name")]
+        public string MovieName { get; set; }
+
         [JsonProperty("date")]
         public DateTime? DateRented { get; set; } = DateTime.Now;
 

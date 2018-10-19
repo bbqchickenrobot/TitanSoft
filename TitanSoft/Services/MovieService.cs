@@ -36,6 +36,12 @@ namespace TitanSoft.Api.Services
             await db.SaveChangesAsync();
         }
 
+        public async Task UpdateAsync(MovieModel movie)
+        {
+            await db.StoreAsync(movie);
+            await db.SaveChangesAsync();
+        }
+
         public async Task<List<Search>> SearchAsync(string term)
         {
             var api = new OmdbApi(config, log);

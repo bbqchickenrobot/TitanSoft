@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using CacheManager.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,12 +14,9 @@ using Swashbuckle.AspNetCore.Swagger;
 using TitanSoft.Api.Middleware;
 using TitanSoft.Api.Services;
 using TitanSoft.DataAccess;
-using TitanSoft.Entities;
+using TitanSoft.Models;
 using TitanSoft.Helpers;
 using TitanSoft.Services;
-using CacheManager.Core.Utility;
-using CacheManager.MicrosoftCachingMemory;
-using Microsoft.AspNetCore.Identity;
 
 namespace TitanSoft
 {
@@ -49,7 +45,7 @@ namespace TitanSoft
             });
 
             services.AddRavenDbAsyncSession(RavenDocumentStore.Store)
-                .AddRavenDbIdentity<AppUser>(options =>
+                .AddRavenDbIdentity<MemberModel>(options =>
                 {
                     // Password settings.
                     options.Password.RequireDigit = false;
@@ -105,7 +101,7 @@ namespace TitanSoft
             services.AddScoped<IUserService, MemberService>();
             services.AddScoped<IOmdbApi, OmdbApi>();
             services.AddSingleton(RavenDocumentStore.Store);
-            services.AddScoped((sp) => new UserStore<AppUser>(sp.GetService<IAsyncDocumentSession>()));
+            services.AddScoped((sp) => new UserStore<MemberModel>(sp.GetService<IAsyncDocumentSession>()));
             services.AddScoped<IMovieService, MovieService>();
             services.AddScoped<IRentalService, RentalService>();
         }
