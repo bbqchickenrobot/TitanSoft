@@ -7,6 +7,9 @@ namespace TitanSoft.Models
 
     public class MovieModel
     {
+        [JsonProperty("Id")]
+        public string Id { get => ImdbId; }
+
         [JsonProperty("Title")]
         public string Title { get; set; }
 

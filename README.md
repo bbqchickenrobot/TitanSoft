@@ -10,7 +10,7 @@ project titled TitanSoft.Api - these files are called:
 
 All of these files are fairly self-explanatory and make up all of the accessible endpoints for the Movie API.
 There is a Swagger endpoint as well.  To make things as simple as possible the swagger endpoint is accessible
-at the web root ( "/" ). Generally, this can be accessed when running locally by visiting the following URL
+at the web root ( "http://localhost:5001/" ). Generally, this can be accessed when running locally by visiting the following URL
 in your browser:
 
 http://localhost:5001/
@@ -21,8 +21,24 @@ MovieController action methods allow for anonymous access. The Swagger endpoint 
 endpoints can be used. The main solution also holds a Postman (http://getpostman.com) export that an be opened
 and run from within the Postman app.
 
+The protected APIs can be used by authenticating against the following URL:
 
-There is also an embedded open-source database (RavenDB) system that is supposed to be only accessible by 
+https://localhost:5001/api/v1/members/auth
+
+with a POST HTTP request with the following JSON body:
+
+{
+    "username": "test@gmail.com",
+    "password": "test"
+}
+
+This API endpoint will return a JWT for submission to the protected API endpoints via the following authorization 
+header:
+
+Authorization Bearer xxxxxxxxxxx
+
+
+The API makes use of an embedded open-source database (RavenDB) that is supposed to be only accessible by 
 authenticated users, however, that restriction has been relaxed when visiting from the localhost URl.  
 The RavenDB admin portal can be accessed at the following URL:
 

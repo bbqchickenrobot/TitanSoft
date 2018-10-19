@@ -5,14 +5,10 @@ using TitanSoft.Models;
 
 namespace TitanSoft.DataAccess
 {
-    public interface IOmdbApiAsync
-    {
-        Task<MovieModel> GetMovieAsync(string id);
-        Task<SearchModel> SearchAsync(string term);
-    }
-
     public interface IOmdbApi{
         MovieModel GetMovie(string id);
-        SearchModel Search(string term);
+        SearchModel Search(string term, int? page);
+        Task<MovieModel> GetMovieAsync(string id);
+        Task<SearchModel> SearchAsync(string term, int? page);
     }
 }

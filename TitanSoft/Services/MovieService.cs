@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Hangfire;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Raven.Client.Documents;
+using Raven.Client.Documents.Linq;
 using Raven.Client.Documents.Session;
 using TitanSoft.DataAccess;
 using TitanSoft.Models;
@@ -13,13 +15,11 @@ namespace TitanSoft.Api.Services
     {
         readonly IAsyncDocumentSession db;
         readonly ILogger log;
-        IConfiguration config;
 
-        public MovieService(IAsyncDocumentSession session, ILogger logger, IConfiguration configuration)
+        public MovieService(IAsyncDocumentSession session, ILogger logger)
         {
             db = session;
             log = logger;
-            config = configuration;
         }
 
         public async Task DeleteAsync(string id) => await Task.Run(() => db.Delete(id));
@@ -42,11 +42,15 @@ namespace TitanSoft.Api.Services
             await db.SaveChangesAsync();
         }
 
-        public async Task<List<Search>> SearchAsync(string term)
+        public async Task<List<MovieModel>> SearchAsync(string term)
         {
-            var api = new OmdbApi(config, log);
-            var results = await api.SearchAsync(term);
-            return results.Search;
+            var results = await db.Query<MovieModel>()
+                                  .Search(x => x.Actors, term)
+                                  .Search(x => x.Plot, term)
+                                  .Search(x => x.Genre, term)
+                                  .Search(x => x.Title, term)
+                                  .ToListAsync();
+            return results;
         }
     }
 }

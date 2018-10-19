@@ -17,6 +17,8 @@ using TitanSoft.DataAccess;
 using TitanSoft.Models;
 using TitanSoft.Helpers;
 using TitanSoft.Services;
+using Hangfire;
+using Hangfire.MemoryStorage;
 
 namespace TitanSoft
 {
@@ -65,6 +67,8 @@ namespace TitanSoft
                     options.User.RequireUniqueEmail = true;
                 });
 
+            services.AddHangfire((opt) => opt.UseMemoryStorage());
+
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
@@ -91,11 +95,7 @@ namespace TitanSoft
                 };
             });
 
-            services.AddAuthorization((o) =>
-            {
-
-            });
-
+            services.AddAuthorization();
 
             services.AddSingleton(Configuration);
             services.AddScoped<IUserService, MemberService>();
@@ -132,6 +132,9 @@ namespace TitanSoft
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials());
+
+            //GlobalConfiguration.Configuration.UseMemoryStorage(new MemoryStorageOptions());
+            app.UseHangfireServer();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();

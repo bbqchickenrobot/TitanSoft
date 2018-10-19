@@ -14,7 +14,7 @@ namespace TitanSoft.Tests
         {
             var term = "american";
             var api = new OmdbApi(config, logger) as IOmdbApi;
-            var results = api.Search(term);
+            var results = api.Search(term, 1);
             Assert.IsTrue(results.Search.Count > 0);
         }
 

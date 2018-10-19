@@ -7,7 +7,7 @@ using TitanSoft.Models;
 
 namespace TitanSoft.DataAccess
 {
-    public class OmdbApi : IOmdbApi, IOmdbApiAsync
+    public class OmdbApi : IOmdbApi
     {
         string url = "";
         ILogger log;
@@ -33,9 +33,11 @@ namespace TitanSoft.DataAccess
             return null;
         }
 
-        public async Task<SearchModel> SearchAsync(string term){
+        public async Task<SearchModel> SearchAsync(string term, int? page = null){
             try
             {
+                if (page.HasValue)
+                    term += $"&page={page.Value}";
                 var response = await GetJsonAsync($"{url}&s={term}");
 
                 return JsonConvert.DeserializeObject<SearchModel>(response);
@@ -49,7 +51,7 @@ namespace TitanSoft.DataAccess
 
         public MovieModel GetMovie(string id) => GetMovieAsync(id).GetAwaiter().GetResult();
 
-        public SearchModel Search(string term) => SearchAsync(term).GetAwaiter().GetResult();
+        public SearchModel Search(string term, int? page) => SearchAsync(term, page).GetAwaiter().GetResult();
 
         protected async Task<string> GetJsonAsync(string uri) => await client.GetStringAsync(uri);
     }

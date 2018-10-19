@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -60,7 +61,8 @@ namespace TitanSoft.Controllers
             var results = await cache.GetOrCreateAsync(term, async (e) =>
             {
                 e.SetSlidingExpiration(TimeSpan.FromHours(12));
-                return await service.SearchAsync(term);
+                var list = await service.SearchAsync(term);
+                return list;
             });
             return Ok(results);
         }
