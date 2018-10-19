@@ -1,12 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Hangfire;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Raven.Client.Documents;
-using Raven.Client.Documents.Linq;
 using Raven.Client.Documents.Session;
-using TitanSoft.DataAccess;
 using TitanSoft.Models;
 
 namespace TitanSoft.Api.Services
@@ -38,7 +34,7 @@ namespace TitanSoft.Api.Services
 
         public async Task UpdateAsync(MovieModel movie)
         {
-            await db.StoreAsync(movie);
+            await db.StoreAsync(movie, movie.Id);
             await db.SaveChangesAsync();
         }
 

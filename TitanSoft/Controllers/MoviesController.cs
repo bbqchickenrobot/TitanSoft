@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using Raven.Client.Exceptions.Documents.Session;
 using TitanSoft.Api.Services;
 using TitanSoft.Models;
 
@@ -77,8 +78,29 @@ namespace TitanSoft.Controllers
 
         [Authorize]
         [HttpPut("update")]
-        public async Task<ActionResult> Update(MovieModel movie){
-            await service.UpdateAsync(movie);
+        public async Task<ActionResult> Update(MovieModel movie)
+        {
+            try
+            {
+                await service.UpdateAsync(movie);
+            }catch(NonUniqueObjectException ex){
+                log.LogError($"movie {movie.Title} already exists with id {movie.Id}", ex);
+                return Forbid();
+            }
+            return Ok();
+        }
+
+        protected async Task<ActionResult> Upsert(MovieModel movie)
+        {
+            try
+            {
+                await service.UpdateAsync(movie);
+            }
+            catch (NonUniqueObjectException ex)
+            {
+                log.LogError($"movie {movie.Title} already exists with id {movie.Id}", ex);
+                return Forbid();
+            }
             return Ok();
         }
     }
