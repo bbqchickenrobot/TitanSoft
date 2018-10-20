@@ -15,4 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TitanSoft.Core\TitanSoft.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
 </Project>

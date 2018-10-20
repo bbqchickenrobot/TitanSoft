@@ -44,7 +44,6 @@ namespace TitanSoft
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "TitanSoft Movies API", Version = "v1" });
-                c.SwaggerDoc("v1", new Info { Title = "TitanSoft Movies API", Version = "v1" });
                 c.AddSecurityDefinition("oauth2", new ApiKeyScheme
                 {
                     Description = "Standard Authorization header using the Bearer scheme. Example: \"bearer {token}\"",

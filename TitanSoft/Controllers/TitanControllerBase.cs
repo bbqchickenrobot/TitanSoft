@@ -1,4 +1,7 @@
-﻿using System.Dynamic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Dynamic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +20,7 @@ namespace TitanSoft.Controllers
         /// </summary>
         /// <returns>Status Code 200</returns>
         /// <param name="message">The message to return</param>
-        protected OkObjectResult Ok(string message = "success") => Ok(null, message);
+        protected OkObjectResult Ok(string message = "success") => Ok<object>(null, message);
 
         /// <summary>
         /// Returns a successful HTTP respoonse (200) with a common response
@@ -26,14 +29,19 @@ namespace TitanSoft.Controllers
         /// <returns>ApiResponse wrapped in an OkObjectResult</returns>
         /// <param name="message">The message to be returned</param>
         /// <param name="value">any data associated with the request</param>
-        protected OkObjectResult Ok(object value, string message = "success")
+        protected OkObjectResult Ok<T>(T value, string message = "success")
         {
             dynamic response = new ExpandoObject();
 
             if(message != null)
                 response.message = message;
+
             if (value != null)
+            {
+                if (IsCollection(value.GetType()))
+                    response.count = ((ICollection)value).Count;
                 response.data = value;
+            }
 
             return new OkObjectResult(response)
                 {
@@ -52,7 +60,7 @@ namespace TitanSoft.Controllers
         {
             dynamic response = new ExpandoObject();
 
-            if(message != null)
+            if(!string.IsNullOrEmpty(message))
                 response.message = message;
             if (error != null)
                 response.data = error;
@@ -62,5 +70,7 @@ namespace TitanSoft.Controllers
                     StatusCode = StatusCodes.Status400BadRequest
                 };
         }
+
+        bool IsCollection(Type type) => type.GetInterface(nameof(ICollection)) != null;
     }
 }
