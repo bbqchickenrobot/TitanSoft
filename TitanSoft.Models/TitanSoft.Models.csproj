@@ -10,5 +10,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Rating.cs" />
+    <Compile Remove="ApiResponseModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TitanSoft.Core\TitanSoft.Core.csproj" />
   </ItemGroup>
 </Project>

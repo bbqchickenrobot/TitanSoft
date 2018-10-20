@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace TitanSoft.Api.Services
+namespace TitanSoft.Services
 {
     public interface IPaymentService
     {

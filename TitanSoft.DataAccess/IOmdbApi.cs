@@ -7,8 +7,8 @@ namespace TitanSoft.DataAccess
 {
     public interface IOmdbApi{
         MovieModel GetMovie(string id);
-        SearchModel Search(string term, int? page);
+        OmdbSearchModel Search(string term, int? page);
         Task<MovieModel> GetMovieAsync(string id);
-        Task<SearchModel> SearchAsync(string term, int? page);
+        Task<OmdbSearchModel> SearchAsync(string term, int? page);
     }
 }

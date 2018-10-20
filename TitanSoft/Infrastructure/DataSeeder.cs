@@ -52,10 +52,10 @@ namespace TitanSoft.Api.Infrastructure
         /// </summary>
         /// <returns>The movie results.</returns>
         /// <param name="api">the OMDB API instantiated object.</param>
-        private static async Task<List<SearchModel>> GetMovieResults(IOmdbApi api)
+        private static async Task<List<OmdbSearchModel>> GetMovieResults(IOmdbApi api)
         {
             // anonymous method
-            async Task<SearchModel> search(string term, int? page = null)
+            async Task<OmdbSearchModel> search(string term, int? page = null)
             {
                 var task = await api.SearchAsync(term, page);
                 return task;

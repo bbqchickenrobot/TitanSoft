@@ -5,13 +5,13 @@ using Raven.Embedded;
 
 namespace TitanSoft.DataAccess
 {
-    public class RavenDocumentStore
+    public static class RavenDocumentStore
     {
-        private static readonly Lazy<IDocumentStore> store = new Lazy<IDocumentStore>(CreateStore);
+        static readonly Lazy<IDocumentStore> store = new Lazy<IDocumentStore>(CreateStore);
 
         public static IDocumentStore Store { get => store.Value; }
 
-        private static IDocumentStore CreateStore()
+        static IDocumentStore CreateStore()
         {
             var serverOptions = new ServerOptions()
             {

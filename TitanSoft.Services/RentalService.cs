@@ -6,7 +6,7 @@ using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
 using TitanSoft.Models;
 
-namespace TitanSoft.Api.Services
+namespace TitanSoft.Services
 {
     public class RentalService : IRentalService
     {

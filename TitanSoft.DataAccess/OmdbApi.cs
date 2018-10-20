@@ -33,25 +33,25 @@ namespace TitanSoft.DataAccess
             return null;
         }
 
-        public async Task<SearchModel> SearchAsync(string term, int? page = null){
+        public async Task<OmdbSearchModel> SearchAsync(string term, int? page = null){
             try
             {
                 if (page.HasValue)
                     term += $"&page={page.Value}";
                 var response = await GetJsonAsync($"{url}&s={term}");
 
-                return JsonConvert.DeserializeObject<SearchModel>(response);
+                return JsonConvert.DeserializeObject<OmdbSearchModel>(response);
             }
             catch (HttpRequestException e)
             {
                 log.LogError(e, e.Message);
             }
-            return new SearchModel();
+            return new OmdbSearchModel();
         }
 
         public MovieModel GetMovie(string id) => GetMovieAsync(id).GetAwaiter().GetResult();
 
-        public SearchModel Search(string term, int? page) => SearchAsync(term, page).GetAwaiter().GetResult();
+        public OmdbSearchModel Search(string term, int? page) => SearchAsync(term, page).GetAwaiter().GetResult();
 
         protected async Task<string> GetJsonAsync(string uri) => await client.GetStringAsync(uri);
     }

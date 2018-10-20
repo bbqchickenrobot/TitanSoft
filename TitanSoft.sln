@@ -14,6 +14,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{67D26EDD-4
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TitanSoft.Services", "TitanSoft.Services\TitanSoft.Services.csproj", "{1B212887-A6AE-41F6-B337-ED4E6CBD1416}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TitanSoft.Core", "TitanSoft.Core\TitanSoft.Core.csproj", "{61D54316-DFA9-4610-9EA8-EB2D76D7CD68}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +40,13 @@ Global
 		{76B56C13-A97D-44AB-9CEB-7CAC7B74B7F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76B56C13-A97D-44AB-9CEB-7CAC7B74B7F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76B56C13-A97D-44AB-9CEB-7CAC7B74B7F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B212887-A6AE-41F6-B337-ED4E6CBD1416}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B212887-A6AE-41F6-B337-ED4E6CBD1416}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B212887-A6AE-41F6-B337-ED4E6CBD1416}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B212887-A6AE-41F6-B337-ED4E6CBD1416}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61D54316-DFA9-4610-9EA8-EB2D76D7CD68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61D54316-DFA9-4610-9EA8-EB2D76D7CD68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61D54316-DFA9-4610-9EA8-EB2D76D7CD68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61D54316-DFA9-4610-9EA8-EB2D76D7CD68}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

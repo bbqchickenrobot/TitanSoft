@@ -5,14 +5,18 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="RavenDB.Identity" Version="4.4.1" />
-    <PackageReference Include="RavenDB.Client.UniqueConstraints" Version="3.5.7" />
     <PackageReference Include="RavenDB.Client" Version="4.1.2" />
     <PackageReference Include="RavenDB.Embedded" Version="4.1.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TitanSoft.Models\TitanSoft.Models.csproj" />
+    <ProjectReference Include="..\TitanSoft.Core\TitanSoft.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Movies\GetMovieCommand.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Commands\" />
+    <Folder Include="Queries\" />
   </ItemGroup>
 </Project>

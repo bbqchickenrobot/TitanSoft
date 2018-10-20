@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using TitanSoft.Models;
 
-namespace TitanSoft.Api.Services
+namespace TitanSoft.Services
 {
     public interface IRentalService {
         Task RentAsync(RentalModel model);

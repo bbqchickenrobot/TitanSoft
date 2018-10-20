@@ -12,13 +12,13 @@ using Raven.Client.Documents.Session;
 using Raven.Identity;
 using Swashbuckle.AspNetCore.Swagger;
 using TitanSoft.Api.Middleware;
-using TitanSoft.Api.Services;
+using TitanSoft.Services;
 using TitanSoft.DataAccess;
 using TitanSoft.Models;
-using TitanSoft.Helpers;
-using TitanSoft.Services;
 using Hangfire;
 using Hangfire.MemoryStorage;
+using TitanSoft.Helpers;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace TitanSoft
 {
@@ -44,6 +44,16 @@ namespace TitanSoft
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "TitanSoft Movies API", Version = "v1" });
+                c.SwaggerDoc("v1", new Info { Title = "TitanSoft Movies API", Version = "v1" });
+                c.AddSecurityDefinition("oauth2", new ApiKeyScheme
+                {
+                    Description = "Standard Authorization header using the Bearer scheme. Example: \"bearer {token}\"",
+                    In = "header",
+                    Name = "Authorization",
+                    Type = "apiKey"
+                });
+                c.OperationFilter<SecurityRequirementsOperationFilter>();
+
             });
 
             services.AddRavenDbAsyncSession(RavenDocumentStore.Store)
@@ -97,12 +107,19 @@ namespace TitanSoft
 
             services.AddAuthorization();
 
-            services.AddSingleton(Configuration);
-            services.AddScoped<IUserService, MemberService>();
-            services.AddScoped<IOmdbApi, OmdbApi>();
+            services.AddSingleton(Configuration);   
             services.AddSingleton(RavenDocumentStore.Store);
+            services.AddScoped(typeof(IDeleteCommand<>), typeof(RavenDeleteEntityCommand<>));
+            services.AddScoped(typeof(IFindByIdQuery<,>), typeof(RavenFindEntityByIdQuery<>));
+            services.AddScoped(typeof(IGetAllQuery<>), typeof(RavenGetAllEntitiesQuery<>));
+            services.AddScoped(typeof(IRavenPersistenceCommand<>), typeof(RavenSaveEntityCommand<>));
+            services.AddScoped<ISearchQuery<MovieModel>, RavenMovieSearchQuery>();
+            services.AddScoped<IMemberService, RavenMemberService>();
+            services.AddScoped<IOmdbApi, OmdbApi>();
             services.AddScoped((sp) => new UserStore<MemberModel>(sp.GetService<IAsyncDocumentSession>()));
-            services.AddScoped<IMovieService, MovieService>();
+            services.AddScoped<IShippingService, ShippingServiceStub>();
+            services.AddScoped<IPaymentService, PaymentServiceStub>();
+            services.AddScoped<IMovieService, RavenMovieService>();
             services.AddScoped<IRentalService, RentalService>();
         }
 

@@ -2,13 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <DockerComposeProjectPath>../docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="foundatio" Version="7.0.1738" />
-    <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.5" />
     <PackageReference Include="newtonsoft.json" Version="11.0.2" />
     <PackageReference Include="serilog" Version="2.7.1" />
     <PackageReference Include="RavenDB.Embedded" Version="4.1.2" />
@@ -30,38 +28,26 @@
     <PackageReference Include="Hangfire" Version="1.6.20" />
     <PackageReference Include="Hangfire.MemoryStorage.Core" Version="1.4.0" />
     <PackageReference Include="Hangfire.LiteDB" Version="0.1.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="4.3.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\TitanSoft.Models\TitanSoft.Models.csproj" />
     <ProjectReference Include="..\TitanSoft.DataAccess\TitanSoft.DataAccess.csproj" />
+    <ProjectReference Include="..\TitanSoft.Services\TitanSoft.Services.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
     <Folder Include="Models\" />
     <Folder Include="Middleware\" />
     <Folder Include="Infrastructure\" />
+    <Folder Include="Helpers\" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Data\System\Temp\scratch.0000000000.buffers" />
-    <None Remove="Data\Databases\TitanSoftStore\Configuration\Temp\compression.0000000000.buffers" />
-    <None Remove="Data\System\Temp\scratch.0000000000.buffers" />
-    <None Remove="Data\System\Temp\compression.0000000000.buffers" />
-    <None Remove="Data\System\Temp\scratch.0000000000.buffers" />
-    <None Remove="Data\System\Temp\scratch.0000000000.buffers" />
-    <None Remove="Data\System\Temp\scratch.0000000000.buffers" />
-    <None Remove="Data\System\Temp\compression.0000000000.buffers" />
-    <None Remove="Data\System\Temp\scratch.0000000000.buffers" />
-    <None Remove="Data\System\Temp\compression.0000000000.buffers" />
-    <None Remove="Data\System\Temp\scratch.0000000000.buffers" />
-    <None Remove="Data\System\Temp\compression.0000000000.buffers" />
-    <None Remove="Data\System\Temp\scratch.0000000000.buffers" />
-    <None Remove="Data\System\Temp\scratch.0000000000.buffers" />
-    <None Remove="Data\Databases\TitanSoftStore\Configuration\headers.one" />
-    <None Remove="Data\System\headers.one" />
-    <None Remove="Data\Databases\TitanSoftStore\Configuration\headers.one" />
-    <None Remove="Data\System\headers.one" />
-    <None Remove="Data\Databases\TitanSoftStore\Configuration\headers.one" />
-    <None Remove="Data\System\headers.one" />
+    <Content Update="launchSettings.json">
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 </Project>

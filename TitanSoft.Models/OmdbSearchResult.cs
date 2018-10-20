@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace TitanSoft.Models
 {
-    public class SearchModel
-    {
-        [JsonProperty("Search")]
-        public List<Search> Search { get; set; }
-    }
-
-    public class Search
+    public class OmdbSearchResult
     {
         [JsonProperty("Title")]
         public string Title { get; set; }

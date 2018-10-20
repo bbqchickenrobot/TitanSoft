@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using TitanSoft.DataAccess;
 
 namespace TitanSoft.Models
 {
 
-    public class MovieModel
+    public class MovieModel : IPersistable
     {
         [JsonProperty("Id")]
         public string Id { get => ImdbId; }

@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace TitanSoft.Api.Services
+namespace TitanSoft.Services
 {
-    public class FauxPaymentService : IPaymentService
+    public class PaymentServiceStub : IPaymentService
     {
         public Task AcceptPayment(object info) => Task.CompletedTask;
     }

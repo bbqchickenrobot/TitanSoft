@@ -1,8 +1,8 @@
 ﻿using TitanSoft.Models;
 
-namespace TitanSoft.Api.Services
+namespace TitanSoft.Services
 {
-    public class FauxShippingService : IShippingService
+    public class ShippingServiceStub : IShippingService
     {
         public void Ship(MemberModel member, MovieModel movie)
         {

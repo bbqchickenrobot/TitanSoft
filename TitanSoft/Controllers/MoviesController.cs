@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Raven.Client.Exceptions.Documents.Session;
-using TitanSoft.Api.Services;
+using TitanSoft.Services;
 using TitanSoft.Models;
 
 namespace TitanSoft.Controllers
@@ -16,7 +15,7 @@ namespace TitanSoft.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
-    public class MoviesController : ControllerBase
+    public class MoviesController : TitanControllerBase
     {
         ILogger log;
         IMovieService service;
@@ -32,7 +31,7 @@ namespace TitanSoft.Controllers
         [HttpGet("all")]
         [AllowAnonymous]
         [ResponseCache(Duration = 120)]
-        public async Task<ActionResult<List<MovieModel>>> AllAsync()
+        public async Task<IActionResult> GetAllAsync()
         {
             var movies = await cache.GetOrCreateAsync("all_movies", async (ICacheEntry e) =>
             {
@@ -57,7 +56,7 @@ namespace TitanSoft.Controllers
 
         [AllowAnonymous]
         [HttpGet("search/{term}")]
-        public async Task<ActionResult<List<Search>>> Search(string term)
+        public async Task<ActionResult<List<OmdbSearchResult>>> Search(string term)
         {
             var results = await cache.GetOrCreateAsync(term, async (e) =>
             {
@@ -68,29 +67,25 @@ namespace TitanSoft.Controllers
             return Ok(results);
         }
 
+        [AllowAnonymous]
+        [HttpGet("search/{term}/{page}")]
+        public async Task<IActionResult> PagedSearch(string term, int page)
+        {
+            var results = await cache.GetOrCreateAsync($"{term}-{page}", async (e) =>
+            {
+                e.SetSlidingExpiration(TimeSpan.FromHours(12));
+                var list = await service.PagedSearchAsync(term, page);
+                return list;
+            });
+            return Ok(results);
+        }
+
         [Authorize]
         [HttpPost("save")]
-        public async Task<ActionResult> Save(MovieModel movie)
-        {
-            await service.SaveAsync(movie);
-            return Ok();
-        }
-
-        [Authorize]
         [HttpPut("update")]
-        public async Task<ActionResult> Update(MovieModel movie)
-        {
-            try
-            {
-                await service.UpdateAsync(movie);
-            }catch(NonUniqueObjectException ex){
-                log.LogError($"movie {movie.Title} already exists with id {movie.Id}", ex);
-                return Forbid();
-            }
-            return Ok();
-        }
+        public async Task<ActionResult> Save(MovieModel movie) => await Upsert(movie);
 
-        protected async Task<ActionResult> Upsert(MovieModel movie)
+        async Task<ActionResult> Upsert(MovieModel movie)
         {
             try
             {
@@ -98,10 +93,17 @@ namespace TitanSoft.Controllers
             }
             catch (NonUniqueObjectException ex)
             {
-                log.LogError($"movie {movie.Title} already exists with id {movie.Id}", ex);
-                return Forbid();
+                var msg = $"movie title with id - {movie.Id} - already exists";
+                log.LogError(msg, ex);
+                return BadRequest(msg);
             }
-            return Ok();
+            catch(Exception ex)
+            {
+                var msg = $"error saving {movie.Title} - {movie.Id}";
+                log.LogError(msg, ex);
+                return BadRequest(msg);
+            }
+            return Ok(null);
         }
     }
 }

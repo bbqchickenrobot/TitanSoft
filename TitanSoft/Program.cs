@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Events;
 using TitanSoft.Api.Infrastructure;
@@ -32,6 +34,13 @@ namespace TitanSoft
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                   .ConfigureAppConfiguration((ctx, config) =>
+                    {
+                       config.SetBasePath(Directory.GetCurrentDirectory())
+                        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                         .AddJsonFile($"appsettings.{ctx.HostingEnvironment.EnvironmentName}.json", optional: true)
+                        .AddEnvironmentVariables();
+                    })
                 .UseUrls("http://localhost:5000;https://localhost:5001;")
                 .UseSerilog()
                 .UseKestrel()

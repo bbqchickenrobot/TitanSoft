@@ -1,10 +1,14 @@
 ﻿using System;
 using Newtonsoft.Json;
+using TitanSoft.DataAccess;
 
 namespace TitanSoft.Models
 {
-    public class RentalModel
+    public class RentalModel : IPersistable
     {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
         [JsonProperty("user_id")]
         public string UserId { get; set; }
 

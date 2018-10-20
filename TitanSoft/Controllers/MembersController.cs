@@ -3,8 +3,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using TitanSoft.Api.Models;
+using TitanSoft.Api.Extensions;
 using TitanSoft.Models;
 using TitanSoft.Services;
 
@@ -14,15 +15,18 @@ namespace TitanSoft.Controllers
     [Authorize]
     [Route("api/v1/[controller]")]
     [Produces("application/json")]
-    public class MembersController : ControllerBase
+    public class MembersController : TitanControllerBase
     {
-        readonly IUserService userService;
+        readonly IMemberService userService;
         readonly UserManager<MemberModel> manager;
         readonly IUserStore<MemberModel> store;
         readonly ILogger log;
+        readonly IConfiguration configuration;
 
-        public MembersController(IUserService service, UserManager<MemberModel> manager, IUserStore<MemberModel> store, ILogger logger)
+        public MembersController(IMemberService service, UserManager<MemberModel> manager, 
+                                 IUserStore<MemberModel> store, ILogger logger, IConfiguration configuration)
         {
+            this.configuration = configuration;
             this.userService = service;
             this.manager = manager;
             this.store = store;
@@ -40,57 +44,69 @@ namespace TitanSoft.Controllers
                 log.LogError($"failed auth attempt for user {model.Username}");
                 return Unauthorized();
             }
-            user.PasswordHash = ""; // don't share sensitice information
-            return Ok(user);
+            user.PasswordHash = ""; // don't share sensitive information
+            var member = user.GetAutheneticatedUser(configuration["appsettings:secret"]);
+            return Ok(member);
         }
 
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegistrationModel user)
         {
-            var result = await userService.RegisterAsync(user);
-            result.PasswordHash = string.Empty;
-            return Ok(result);
+            try
+            {
+                var result = await userService.RegisterAsync(user);
+                result.PasswordHash = string.Empty;
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                var msg = $"Error creating user {user.Email}";
+                log.LogError(msg, ex);
+                return BadRequest(msg);
+            }
         }
 
         [HttpGet("all")]
-        public IActionResult GetAll()
-        {
-            var users = userService.GetAll();
-            return Ok(users);
-        }
+        public async Task<IActionResult> GetAllAsync() => Ok(await userService.GetAllAsync());
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<MemberModel>> Get(string id)
+        public async Task<IActionResult> Get(string id)
         {
             var user = await userService.GetAsync(id);
             if (user == null)
-                return NotFound();
+                return BadRequest($"user not found with id {id}");
             return Ok(user);
         }
 
-        [HttpPut()]
-        public async Task<ActionResult> Update([FromBody] MemberModel user)
+        [HttpPut("update")]
+        public async Task<IActionResult> Update([FromBody] MemberModel user)
         {
-            try{
+            try
+            {
                 await userService.UpdateAsync(user);
                 return Ok();
-            }catch(Exception ex){
-                log.LogError(ex.Message, ex);
             }
-            return BadRequest();
+            catch (Exception ex)
+            {
+                log.LogError(ex.Message, ex);
+                return BadRequest($"unable to update user with id {user.Id}");
+            }
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            try{
+            try
+            {
                 await userService.DeleteAsync(id);
-                Ok();
-            }catch(Exception ex){
-                log.LogError(ex.Message, ex);
+                return Ok();
             }
-            return BadRequest();
+            catch (Exception ex)
+            {
+                log.LogError(ex.Message, ex);
+                return BadRequest($"there was an error deleting the user with id {id}");
+            }
         }
     }
 }

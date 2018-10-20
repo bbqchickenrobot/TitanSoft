@@ -49,4 +49,9 @@ click on the 'TitanSoftStore' dateabase store.  From here you will see several c
 from the RavenDB admin portal.
 
  
- 
+ -----
+ Talk about why cmomand / queyr pattern was used vs repository even though they both lend to seperation of concerns by reducing controller bloat 
+ Talk about why command / query objs were intantiated directly in service layer and also note they can be injected
+ Talk about project layer structure and why
+ Talk about why DI was used (open to change down the road etc)
+ Discuss why the MS ILogger was used vs Serilogs (gives us some degree of change in the future)
