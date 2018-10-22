@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
 using TitanSoft.DataAccess;
@@ -14,18 +19,21 @@ namespace TitanSoft.Services
 
     public class RavenMemberService : IMemberService
     {
-        protected readonly IAsyncDocumentSession db;
-        protected readonly UserManager<MemberModel> umanager;
-        protected readonly ILogger log;
+        readonly IAsyncDocumentSession db;
+        readonly UserManager<MemberModel> umanager;
+        readonly ILogger log;
+        readonly IConfiguration configuration;
 
-        public RavenMemberService(IAsyncDocumentSession db, UserManager<MemberModel> manager, ILogger logger)
+        public RavenMemberService(IAsyncDocumentSession db, UserManager<MemberModel> manager, 
+                                  IConfiguration configuration, ILogger logger)
         {
+            this.configuration = configuration;
             this.db = db;
             umanager = manager;
             log = logger;
         }
 
-        public async Task<MemberModel> RegisterAsync(RegistrationModel model)
+        public async Task RegisterAsync(RegistrationModel model)
         {
             log.LogDebug($"registering user {model.Email}");
 
@@ -39,11 +47,11 @@ namespace TitanSoft.Services
             await umanager.AddPasswordAsync(user, model.Password);
             var result =  await umanager.CreateAsync(user);
             await db.SaveChangesAsync();
-            log.LogInformation($"successfully registered user");
-            return user;
+            log.LogInformation($"successfully registered user {model.Email}");
+            return;
         }
 
-        public async Task<MemberModel> AuthenticateAsync(string username, string password)
+        public async Task<AuthedUserModel> AuthenticateAsync(string username, string password, string key)
         {
             log.LogInformation($"authenticating user {username}");
             var user = await umanager.FindByIdAsync(username);
@@ -57,44 +65,70 @@ namespace TitanSoft.Services
             if (!result)
                 return null;
                 
-            // remove password before returning
-            user.PasswordHash = null;
             log.LogInformation($"successfully logged in user {username}");
-            return user;
+            return new AuthedUserModel
+            {
+                Id = user.Id,
+                Name = $"{user.Firstame} {user.Lastame}",
+                Token = GenerateToken(user, key)
+            };
         }
 
-        public async Task<List<MemberModel>> GetAllAsync()
+        protected string GenerateToken(MemberModel user, string tokenKey)
         {
-            // return users without passwords
-            var users = (await new RavenGetAllEntitiesQuery<MemberModel>(db, log).GetAllAsync())
-                .Select(x =>
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(tokenKey);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Audience = "Everyone",
+                Issuer = "TitanSoft.com",
+                Subject = new ClaimsIdentity(new Claim[]
                 {
-                    x.PasswordHash = "";
-                    return x;
-                });
-            return users.ToList();
+                    new Claim(ClaimTypes.Name, user.Firstame),
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim("id", user.Id)
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
+                                                            SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
+
+        public async Task<List<UserViewModel>> GetAllAsync() =>
+            (await new RavenGetAllEntitiesQuery<MemberModel>(db, log).GetAllAsync())
+                        .Select(x => x.ToViewModel()).ToList();
 
         public async Task DeleteAsync(string id ) =>
             await umanager.DeleteAsync(await umanager.FindByIdAsync(id));
 
         public void Delete(string id) => DeleteAsync(id).GetAwaiter().GetResult();
 
-        public void Update(MemberModel user) => UpdateAsync(user).GetAwaiter().GetResult();
+        public void Update(UserViewModel user) => UpdateAsync(user).GetAwaiter().GetResult();
 
-        public async Task UpdateAsync(MemberModel user) => await umanager.UpdateAsync(user);
+        public async Task UpdateAsync(UserViewModel model)
+        {
+            var member = await umanager.FindByIdAsync(model.Id);
+            member.UpdateFromViewModel(model);
+            await umanager.UpdateAsync(member);
+        }
 
-        public async Task<MemberModel> GetAsync(string id) => 
-            await new RavenFindEntityByIdQuery<MemberModel>(db, log).FindByIdAsync(id);
+        public async Task<UserViewModel> GetAsync(string id) =>
+            (await new RavenFindEntityByIdQuery<MemberModel>(db, log).FindByIdAsync(id)).ToViewModel();
 
-        public MemberModel Authenticate(string username, string password) => 
-            AuthenticateAsync(username, password).GetAwaiter().GetResult();
+        public UserViewModel Get(string id) => GetAsync(id).GetAwaiter().GetResult();
 
-        public List<MemberModel> GetAll() => GetAllAsync().GetAwaiter().GetResult();
+        public List<UserViewModel> GetAll() => GetAllAsync().GetAwaiter().GetResult();
 
-        public MemberModel Register(RegistrationModel model) =>
+        public AuthedUserModel Authenticate(string username, string password, string secret) =>
+                AuthenticateAsync(username, password, secret).GetAwaiter().GetResult();
+
+        public void Register(RegistrationModel model) =>
             RegisterAsync(model).GetAwaiter().GetResult();
 
-        public MemberModel Get(string id) => GetAsync(id).GetAwaiter().GetResult();
+        public void Delete(UserViewModel user) => Delete(user.Id);
+
+        public Task DeleteAsync(UserViewModel user) => DeleteAsync(user.Id);
     }
 }

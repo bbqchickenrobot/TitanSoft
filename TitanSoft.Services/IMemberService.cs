@@ -7,18 +7,20 @@ namespace TitanSoft.Services
 {
     public interface IMemberService
     {
-        MemberModel Authenticate(string username, string password);
-        List<MemberModel> GetAll();
-        MemberModel Register(RegistrationModel model);
-        MemberModel Get(string id);
-        void Update(MemberModel user);
+        AuthedUserModel Authenticate(string username, string password, string secret);
+        List<UserViewModel> GetAll();
+        void Register(RegistrationModel model);
+        UserViewModel Get(string id);
+        void Update(UserViewModel user);
         void Delete(string id);
+        void Delete(UserViewModel user);
 
-        Task<MemberModel> AuthenticateAsync(string username, string password);
-        Task<List<MemberModel>> GetAllAsync();
-        Task<MemberModel> RegisterAsync(RegistrationModel model);
-        Task<MemberModel> GetAsync(string id);
-        Task UpdateAsync(MemberModel user);
+        Task<AuthedUserModel> AuthenticateAsync(string username, string password, string secret);
+        Task<List<UserViewModel>> GetAllAsync();
+        Task RegisterAsync(RegistrationModel model);
+        Task<UserViewModel> GetAsync(string id);
+        Task UpdateAsync(UserViewModel user);
         Task DeleteAsync(string id);
+        Task DeleteAsync(UserViewModel user);
     }
 }

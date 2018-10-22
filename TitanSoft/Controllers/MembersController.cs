@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using TitanSoft.Api.Extensions;
 using TitanSoft.Models;
 using TitanSoft.Services;
 
@@ -37,16 +36,16 @@ namespace TitanSoft.Controllers
         [HttpPost("auth")]
         public async Task<IActionResult> Authenticate([FromBody]LoginModel model)
         {
-            var user = await userService.AuthenticateAsync(model.Username, model.Password);
+            var authedUser = await userService.AuthenticateAsync(model.Username, model.Password, 
+                                                                 configuration["appsettings:secret"]);
 
-            if (user == null)
+            if (authedUser == null)
             {
                 log.LogError($"failed auth attempt for user {model.Username}");
                 return Unauthorized();
             }
-            user.PasswordHash = ""; // don't share sensitive information
-            var member = user.GetAutheneticatedUser(configuration["appsettings:secret"]);
-            return Ok(member);
+
+            return Ok(authedUser);
         }
 
         [AllowAnonymous]
@@ -55,9 +54,8 @@ namespace TitanSoft.Controllers
         {
             try
             {
-                var result = await userService.RegisterAsync(user);
-                result.PasswordHash = string.Empty;
-                return Ok(result);
+                await userService.RegisterAsync(user);
+                return Ok($"successfull registered user {user.Email}");
             }
             catch (Exception ex)
             {
@@ -80,7 +78,7 @@ namespace TitanSoft.Controllers
         }
 
         [HttpPut("update")]
-        public async Task<IActionResult> Update([FromBody] MemberModel user)
+        public async Task<IActionResult> Update([FromBody] UserViewModel user)
         {
             try
             {
