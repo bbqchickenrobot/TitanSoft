@@ -19,7 +19,10 @@ The different endpoints can be manipulated using this interface depending on the
 request. Some of the endpoints are in fact protected using a JWT and an authentication mechanism. Most of the
 MovieController action methods allow for anonymous access. The Swagger endpoint will demonstrate how these 
 endpoints can be used. The main solution also holds a Postman (http://getpostman.com) export that an be opened
-and run from within the Postman app.
+and run from within the Postman app. You can get that export from the following URL:  
+
+https://documenter.getpostman.com/view/15474/RWgwQb4k
+
 
 The protected APIs can be used by authenticating against the following URL:
 
@@ -49,9 +52,3 @@ click on the 'TitanSoftStore' dateabase store.  From here you will see several c
 from the RavenDB admin portal.
 
  
- -----
- Talk about why cmomand / queyr pattern was used vs repository even though they both lend to seperation of concerns by reducing controller bloat 
- Talk about why command / query objs were intantiated directly in service layer and also note they can be injected
- Talk about project layer structure and why
- Talk about why DI was used (open to change down the road etc)
- Discuss why the MS ILogger was used vs Serilogs (gives us some degree of change in the future)
