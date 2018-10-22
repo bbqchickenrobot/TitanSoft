@@ -87,12 +87,13 @@ namespace TitanSoft.Controllers
             try
             {
                 var model = await service.GetAsync(id);
+                log.LogInformation($"deleting movie: {model.Title} - {model.Id}");
                 await service.DeleteAsync(model);
                 return Ok("success");
             }
             catch(Exception ex)
             {
-                var msg = $"error deleting movie with id {id}";
+                var msg = $"error deleting movie with id {id} - {ex.Message}";
                 log.LogError(msg, ex);
                 return BadRequest(msg);
             }
