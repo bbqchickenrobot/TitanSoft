@@ -21,6 +21,17 @@ MovieController action methods allow for anonymous access. The Swagger endpoint 
 endpoints can be used. The main solution also holds a Postman (http://getpostman.com) export that an be opened
 and run from within the Postman app.
 
+The authentication endpoing is located at:
+
+https://localhost:5001/auth/
+
+With the following JSON object:
+
+{
+   "username": "test@gmail.com",
+   "password": "test"
+ }
+
 
 There is also an embedded open-source database (RavenDB) system that is supposed to be only accessible by 
 authenticated users, however, that restriction has been relaxed when visiting from the localhost URl.  
