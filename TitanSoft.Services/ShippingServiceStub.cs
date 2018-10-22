@@ -4,7 +4,7 @@ namespace TitanSoft.Services
 {
     public class ShippingServiceStub : IShippingService
     {
-        public void Ship(MemberModel member, MovieModel movie)
+        public void Ship(UserViewModel member, MovieModel movie)
         {
         }
     }

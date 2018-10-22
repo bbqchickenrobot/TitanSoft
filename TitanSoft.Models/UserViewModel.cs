@@ -40,6 +40,12 @@ namespace TitanSoft.Models
 
         [JsonProperty("aboutme")]
         public string AboutMe { get; set; }
+
+        [JsonProperty("password")]
+        public string password { get; set;}
+
+        [JsonProperty("phonenumber")]
+        public string phonenumber { get; set; }
     }
 }
 

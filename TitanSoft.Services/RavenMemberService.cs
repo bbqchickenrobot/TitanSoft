@@ -111,7 +111,15 @@ namespace TitanSoft.Services
         {
             var member = await umanager.FindByIdAsync(model.Id);
             member.UpdateFromViewModel(model);
-            await umanager.UpdateAsync(member);
+            var result = await umanager.UpdateAsync(member);
+        }
+
+        public void UpdatePassword(MemberModel user, string current, string password) =>
+                UpdatePasswordAsync(user, current, password).GetAwaiter().GetResult();
+
+        public async Task UpdatePasswordAsync(MemberModel user, string current, string password)
+        {
+            await umanager.ChangePasswordAsync(user, current, password);        
         }
 
         public async Task<UserViewModel> GetAsync(string id) =>

@@ -4,6 +4,6 @@ namespace TitanSoft.Services
 {
     public interface IShippingService
     {
-        void Ship(MemberModel member, MovieModel movie);
+        void Ship(UserViewModel member, MovieModel movie);
     }
 }
