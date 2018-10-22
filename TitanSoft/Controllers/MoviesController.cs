@@ -81,6 +81,24 @@ namespace TitanSoft.Controllers
         }
 
         [Authorize]
+        [HttpDelete("delete")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            try
+            {
+                var model = await service.GetAsync(id);
+                await service.DeleteAsync(model);
+                return Ok("success");
+            }
+            catch(Exception ex)
+            {
+                var msg = $"error deleting movie with id {id}";
+                log.LogError(msg, ex);
+                return BadRequest(msg);
+            }
+        }
+
+        [Authorize]
         [HttpPost("save")]
         [HttpPut("update")]
         public async Task<ActionResult> Save(MovieModel movie) => await Upsert(movie);

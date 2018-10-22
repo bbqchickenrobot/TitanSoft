@@ -17,16 +17,22 @@ namespace TitanSoft.Controllers
     public class RentalsController : TitanControllerBase
     {
         readonly IRentalService service;
+        readonly IMemberService memService;
+        readonly IMovieService movService;
         readonly ILogger log;
         readonly IShippingService shippingService;
         readonly IPaymentService paymentService;
 
-        public RentalsController(IRentalService service, IPaymentService paymentService, 
+        public RentalsController(IRentalService service, IMemberService memService, 
+                                 IMovieService movService, 
+                                 IPaymentService paymentService, 
                                  IShippingService shippingService, ILogger logger)
         {
             this.paymentService = paymentService;
             this.shippingService = shippingService;
             this.service = service;
+            this.memService = memService;
+            this.movService = movService;
             log = logger;
         }
 
@@ -35,7 +41,11 @@ namespace TitanSoft.Controllers
         {
             try
             {
+                var user = await memService.GetAsync(model.UserId);
+                var movie = await movService.GetAsync(model.MovieId);
                 await service.RentAsync(model);
+                await paymentService.AcceptPayment(new object());
+                shippingService.Ship(user, movie);
             }
             catch(Exception ex)
             {
