@@ -84,7 +84,7 @@ namespace TitanSoft.Services
                 Issuer = "TitanSoft.com",
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.Firstame),
+                    new Claim(ClaimTypes.Name, user.Email),
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim("id", user.Id)
                 }),

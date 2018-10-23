@@ -10,7 +10,7 @@
                 AboutMe = member.AboutMe,
                 Address1 = member.Address1,
                 City = member.City,
-                Firstname = member.Lastame,
+                Firstname = member.Firstame,
                 Lastname = member.Lastame,
                 Headline = member.Headline,
                 PostalCode = member.PostalCode,

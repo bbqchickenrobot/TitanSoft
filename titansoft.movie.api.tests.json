@@ -1,0 +1,568 @@
+{
+	"info": {
+		"_postman_id": "f5b87354-2327-4c76-80af-70105607c782",
+		"name": "OMDB",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Members",
+			"item": [
+				{
+					"name": "All Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://localhost:5001/api/v1/members/all",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"v1",
+								"members",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://localhost:5001/api/v1/members/test1@gmail.com",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"v1",
+								"members",
+								"test1@gmail.com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "        {\n        \t\"id\": \"bbqchickenrobot@gmail.com\",\n            \"firstname\": \"troy\",\n            \"lastname\": \"robinson\",\n            \"address1\": \"3641 Midvale Ave\",\n            \"city\": \"los angeles\",\n            \"state\": \"ca\",\n            \"postalcode\": \"90034\",\n            \"headline\": \"Im me\",\n            \"aboutMe\": \"I am a software engineer\",\n            \"username\": \"bbqchickenrobot@gmail.com\",\n            \"email\": \"bbqchickenrobot@gmail.com\",\n            \"phonenumber\": \"3104218769\"\n        }"
+						},
+						"url": {
+							"raw": "https://localhost:5001/api/v1/members/update",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"v1",
+								"members",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:5001/api/v1/members/test1@gmail.com",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"v1",
+								"members",
+								"test1@gmail.com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Rentals List",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "https://localhost:5001/api/v1/rentals/",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"v1",
+								"rentals",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			}
+		},
+		{
+			"name": "Movies",
+			"item": [
+				{
+					"name": "All Movies",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "https://localhost:5001/api/v1/movies/all",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"v1",
+								"movies",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Movie By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "",
+								"value": ""
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://localhost:5001/api/v1/movies/testid1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"v1",
+								"movies",
+								"testid1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Movie By Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"Id\": \"tt2146776\",\n        \"Title\": \"X-Men Anime: A Team of Outsiders - Test\",\n        \"Year\": 2012,\n        \"Rated\": \"N/A\",\n        \"Released\": \"24 Apr 2012\",\n        \"Runtime\": \"10 min\",\n        \"Genre\": \"Animation, Short\",\n        \"Director\": \"N/A\",\n        \"Writer\": \"N/A\",\n        \"Actors\": \"Megan Thomas Bradner, Warren Ellis, Cort Lane, Jeph Loeb\",\n        \"Plot\": \"N/A\",\n        \"Language\": \"English\",\n        \"Country\": \"USA\",\n        \"Awards\": \"N/A\",\n        \"Poster\": \"N/A\",\n        \"Ratings\": [\n            {\n                \"Source\": \"Internet Movie Database\",\n                \"Value\": \"7.3/10\"\n            }\n        ],\n        \"Metascore\": \"N/A\",\n        \"imdbRating\": \"7.3\",\n        \"imdbVotes\": \"9\",\n        \"imdbID\": \"tt2146776\",\n        \"Type\": \"movie\",\n        \"DVD\": \"N/A\",\n        \"BoxOffice\": \"N/A\",\n        \"Production\": \"N/A\",\n        \"Website\": \"N/A\",\n        \"Response\": \"True\"\n    }"
+						},
+						"url": {
+							"raw": "https://localhost:5001/api/v1/movies/update/",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"v1",
+								"movies",
+								"update",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert Movie",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t    \"imdbID\": \"testid1\",\n        \"Title\": \"My Custom Movie 2\",\n        \"Year\": 2012,\n        \"Rated\": \"N/A\",\n        \"Released\": \"24 Apr 2012\",\n        \"Runtime\": \"10 min\",\n        \"Genre\": \"Animation, Short\",\n        \"Director\": \"N/A\",\n        \"Writer\": \"N/A\",\n        \"Actors\": \"Megan Thomas Bradner, Warren Ellis, Cort Lane, Jeph Loeb\",\n        \"Plot\": \"N/A\",\n        \"Language\": \"English\",\n        \"Country\": \"USA\",\n        \"Awards\": \"N/A\",\n        \"Poster\": \"N/A\",\n        \"Ratings\": [\n            {\n                \"Source\": \"Internet Movie Database\",\n                \"Value\": \"7.3/10\"\n            }\n        ],\n        \"Metascore\": \"N/A\",\n        \"imdbRating\": \"7.3\",\n        \"imdbVotes\": \"9\",\n        \"Type\": \"movie\",\n        \"DVD\": \"N/A\",\n        \"BoxOffice\": \"N/A\",\n        \"Production\": \"N/A\",\n        \"Website\": \"N/A\",\n        \"Response\": \"True\"\n    }"
+						},
+						"url": {
+							"raw": "https://localhost:5001/api/v1/movies/save/",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"v1",
+								"movies",
+								"save",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Movie by Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:5001/api/v1/movies/delete/testid1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"v1",
+								"movies",
+								"delete",
+								"testid1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Movie Search",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "https://localhost:5001/api/v1/movies/search/troy",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"v1",
+								"movies",
+								"search",
+								"troy"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Movie Search Paged",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "https://localhost:5001/api/v1/movies/search/test/1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"v1",
+								"movies",
+								"search",
+								"test",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Rentals",
+			"item": [
+				{
+					"name": "Rent Movie",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"testid2\",\n  \"user_id\": \"test@gmail.com\",\n  \"movie_id\": \"testid2\",\n  \"movie_name\": \"My Movie Name\",\n  \"date\": \"2018-10-22T22:04:55.863Z\",\n  \"price\": 3.00\n}"
+						},
+						"url": {
+							"raw": "https://localhost:5001/api/v1/rentals/",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"v1",
+								"rentals",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Rent History",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://localhost:5001/api/v1/rentals/",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"v1",
+								"rentals",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"test@gmail.com\",\n\t\"firstname\": \"test\",\n\t\"lastname\": \"user\",\n\t\"password\": \"test\"\n}"
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/members/register",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"members",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authenticate",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"test@gmail.com\",\n\t\"password\": \"test\"\n}"
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/members/auth",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"members",
+						"auth"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

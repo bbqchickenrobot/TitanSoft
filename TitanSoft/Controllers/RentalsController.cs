@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TitanSoft.Services;
 using TitanSoft.Models;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using System.Security.Principal;
 
 namespace TitanSoft.Controllers
 {
@@ -21,15 +24,18 @@ namespace TitanSoft.Controllers
         readonly IMovieService movService;
         readonly ILogger log;
         readonly IShippingService shippingService;
+        private readonly UserManager<MemberModel> userManager;
         readonly IPaymentService paymentService;
 
         public RentalsController(IRentalService service, IMemberService memService, 
                                  IMovieService movService, 
                                  IPaymentService paymentService, 
-                                 IShippingService shippingService, ILogger logger)
+                                 IShippingService shippingService, 
+                                 UserManager<MemberModel> userManager, ILogger logger)
         {
             this.paymentService = paymentService;
             this.shippingService = shippingService;
+            this.userManager = userManager;
             this.service = service;
             this.memService = memService;
             this.movService = movService;
@@ -57,9 +63,14 @@ namespace TitanSoft.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<RentalModel>>> History()
+        public async Task<IActionResult> History()
         {
-            var id = HttpContext.User.Identity.Name;
+            var claimsIdentity = User.Identity as ClaimsIdentity;
+
+            var id = (from c in claimsIdentity.Claims
+                                 where c.Type == "id"
+                                 select c.Value).Single();
+
             var results = await service.GetHistoryAsync(id);
 
             return Ok(results);
