@@ -58,5 +58,18 @@
     <None Remove="Data\System\Temp\scratch.0000000000.buffers" />
     <None Remove="Data\System\Temp\compression.0000000000.buffers" />
     <None Remove="Data\System\Temp\scratch.0000000000.buffers" />
+    <None Remove="Data\Databases\TitanSoftStore\headers.one" />
+    <None Remove="Data\Databases\TitanSoftStore\headers.two" />
+    <None Remove="Data\Databases\TitanSoftStore\Configuration\Raven.voron" />
+    <None Remove="Data\Databases\TitanSoftStore\Configuration\headers.one" />
+    <None Remove="Data\Databases\TitanSoftStore\Configuration\headers.two" />
+    <None Remove="Data\Databases\TitanSoftStore\Configuration\Journals\0000000000000000000.journal" />
+    <None Remove="Data\Databases\TitanSoftStore\Configuration\Temp\0000000000000000000.recovery" />
+    <None Remove="Data\Databases\TitanSoftStore\Configuration\Temp\compression.0000000000.buffers" />
+    <None Remove="Data\Databases\TitanSoftStore\Configuration\Temp\scratch.0000000000.buffers" />
+    <None Remove="Data\Databases\TitanSoftStore\Indexes\Auto_MemberModels_ByEmail\headers.one" />
+    <None Remove="Data\Databases\TitanSoftStore\Indexes\Auto_MemberModels_ByEmail\headers.two" />
+    <None Remove="Data\Databases\TitanSoftStore\Indexes\Auto_MemberModels_ByEmail\Journals\0000000000000000012.journal" />
+    <None Remove="Data\System\headers.one" />
   </ItemGroup>
 </Project>

@@ -44,7 +44,7 @@ namespace TitanSoft.Controllers
         [HttpGet("{id}")]
         [AllowAnonymous]
         [ResponseCache(Duration = 120)]
-        public async Task<ActionResult<string>> GetAsync(string id)
+        public async Task<IActionResult> GetAsync(string id)
         {
             var results = await cache.GetOrCreateAsync(id, async (e) =>
                     {
@@ -56,7 +56,7 @@ namespace TitanSoft.Controllers
 
         [AllowAnonymous]
         [HttpGet("search/{term}")]
-        public async Task<ActionResult<List<OmdbSearchResult>>> Search(string term)
+        public async Task<IActionResult> Search(string term)
         {
             var results = await cache.GetOrCreateAsync(term, async (e) =>
             {
@@ -102,9 +102,9 @@ namespace TitanSoft.Controllers
         [Authorize]
         [HttpPost("save")]
         [HttpPut("update")]
-        public async Task<ActionResult> Save(MovieModel movie) => await Upsert(movie);
+        public async Task<IActionResult> Save(MovieModel movie) => await Upsert(movie);
 
-        async Task<ActionResult> Upsert(MovieModel movie)
+        async Task<IActionResult> Upsert(MovieModel movie)
         {
             try
             {
